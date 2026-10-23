@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import type { SessionView } from "../../api/types";
+import type { DeliveryStep, SessionView } from "../../api/types";
 import { REVIEW_CHECKS } from "../../api/types";
 import { DISPOSITIONS, PRIORITIES, REVIEW_STATUSES, SOURCES, relativeTime, sentenceCount, shortId, shortUrl } from "../../lib/format";
 import { piiSegments, replySegments } from "../../lib/text";
@@ -319,6 +319,17 @@ export function ApproveBar({
           A redacted record was appended and the email draft <span className="font-mono">{view.approved.email_file}</span>{" "}
           was saved. Nothing was sent.
         </p>
+        {view.approved.delivery.doc.status !== "off" && (
+          <ul data-testid="delivery" className="mt-2 space-y-1 text-body-xs">
+            <DeliveryLine testId="delivery-doc" label="Google Doc" step={view.approved.delivery.doc} done="record appended" />
+            <DeliveryLine
+              testId="delivery-email"
+              label="Gmail"
+              step={view.approved.delivery.email}
+              done="draft created with no recipient; add it in Gmail before sending"
+            />
+          </ul>
+        )}
         <Link to="/records" className="mt-2 inline-flex items-center gap-1 text-primary hover:underline">
           Open records <Icon name="chevron" className="h-3.5 w-3.5" />
         </Link>
@@ -355,5 +366,18 @@ export function ApproveBar({
       </p>
       {error && <p className="text-body-xs text-danger">{error}</p>}
     </div>
+  );
+}
+
+// One line per MCP step after approve. A failure shows the server's error code only.
+function DeliveryLine({ testId, label, step, done }: { testId: string; label: string; step: DeliveryStep; done: string }) {
+  const ok = step.status === "done";
+  return (
+    <li data-testid={testId} data-status={step.status} className={`flex items-start gap-1.5 ${ok ? "text-ok" : "text-warn"}`}>
+      <Icon name={ok ? "check" : "alert"} className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+      <span>
+        <span className="font-semibold">{label}:</span> {ok ? done : `not done (${step.error ?? "unknown"})`}
+      </span>
+    </li>
   );
 }

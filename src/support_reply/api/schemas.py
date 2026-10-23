@@ -155,9 +155,22 @@ class TurnOut(BaseModel):
     provenance: ProvenanceOut
 
 
+class StepOut(BaseModel):
+    status: Literal["done", "failed", "off"]
+    error: str | None
+
+
+class DeliveryOut(BaseModel):
+    """After approve: the Google Doc append and the Gmail draft, over MCP."""
+
+    doc: StepOut
+    email: StepOut
+
+
 class ApprovedOut(BaseModel):
     approved_at: str
     email_file: str
+    delivery: DeliveryOut
 
 
 class SessionView(BaseModel):
@@ -203,6 +216,7 @@ class ApproveOut(BaseModel):
     session_id: str
     email_file: str
     record: RecordOut
+    delivery: DeliveryOut
 
 
 class EmailOut(BaseModel):
@@ -223,6 +237,11 @@ class CorpusOut(BaseModel):
     schemes: int
 
 
+class McpOut(BaseModel):
+    enabled: bool
+    doc_configured: bool
+
+
 class HealthOut(BaseModel):
     status: Literal["ok"]
     environment: str
@@ -230,6 +249,7 @@ class HealthOut(BaseModel):
     corpus: CorpusOut
     review_window: WindowOut
     access_code_required: bool
+    mcp: McpOut
 
 
 class ErrorOut(BaseModel):

@@ -105,6 +105,24 @@ describe("TicketView states from real API responses", () => {
     expect(screen.queryByTestId("approve-button")).not.toBeInTheDocument();
     expect(screen.getByTestId("approved-note")).toHaveTextContent("Nothing was sent.");
     expect(screen.queryByTestId("refine-input")).not.toBeInTheDocument();
+    // MCP is off in the captured fixtures, so there are no Doc or Gmail lines.
+    expect(screen.queryByTestId("delivery")).not.toBeInTheDocument();
+  });
+
+  it("approved over MCP: each step says whether it was done", () => {
+    const view = api.views.approved;
+    show({
+      ...view,
+      approved: {
+        ...view.approved!,
+        delivery: { doc: { status: "done", error: null }, email: { status: "failed", error: "AUTHENTICATION_REQUIRED" } },
+      },
+    });
+    expect(screen.getByTestId("delivery-doc")).toHaveAttribute("data-status", "done");
+    expect(screen.getByTestId("delivery-doc")).toHaveTextContent("Google Doc: record appended");
+    expect(screen.getByTestId("delivery-email")).toHaveAttribute("data-status", "failed");
+    expect(screen.getByTestId("delivery-email")).toHaveTextContent("Gmail: not done (AUTHENTICATION_REQUIRED)");
+    expect(screen.getByTestId("approved-note")).toHaveTextContent("Nothing was sent.");
   });
 
   it("five refinements: the counter is full and the input is disabled", () => {

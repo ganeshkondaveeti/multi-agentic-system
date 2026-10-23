@@ -11,11 +11,11 @@ PROD_API ?= https://reply-desk-api.onrender.com
 .PHONY: help install dev dev-api dev-web test e2e e2e-prod stack-check docker-build docker-run preview-direct
 
 help:
-	@echo "install         uv sync and npm ci"
+	@echo "install         uv sync, npm ci, and build the MCP server"
 	@echo "dev             API on :$(API_PORT) with reload, web on :5173"
 	@echo "dev-api         API only"
 	@echo "dev-web         web only (proxies /api to :$(API_PORT))"
-	@echo "test            pytest and Vitest"
+	@echo "test            pytest, Vitest, and the MCP server tests"
 	@echo "e2e             Playwright against its own API (models off) and a preview build"
 	@echo "e2e-prod        Playwright against the Render deploy (live models; needs E2E_ACCESS_CODE)"
 	@echo "stack-check     Playwright against the production server command, cross-origin, then a PII grep"
@@ -25,6 +25,7 @@ help:
 install:
 	uv sync
 	cd web && npm ci
+	cd mcp-server && npm ci && npm run build
 
 dev:
 	$(MAKE) -j2 dev-api dev-web
@@ -38,6 +39,7 @@ dev-web:
 test:
 	uv run pytest
 	cd web && npm test
+	cd mcp-server && npm test
 
 # The Playwright config starts the API with REPLY_DESK_MODELS=off, builds and previews
 # the web app, and stops both when the run ends.

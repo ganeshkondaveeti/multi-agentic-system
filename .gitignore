@@ -12,6 +12,11 @@ out/
 uv-*.lock
 .DS_Store
 
+# mcp-server: build output, and the OAuth client and token `npm run auth` uses
+mcp-server/dist/
+mcp-server/data/
+credential*.json
+
 # web
 node_modules/
 web/dist/

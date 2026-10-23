@@ -1,0 +1,24 @@
+export enum ErrorCode {
+  AUTHENTICATION_REQUIRED = 'AUTHENTICATION_REQUIRED',
+  AUTHENTICATION_FAILED = 'AUTHENTICATION_FAILED',
+  INSUFFICIENT_PERMISSIONS = 'INSUFFICIENT_PERMISSIONS',
+  MISSING_REQUIRED_FIELD = 'MISSING_REQUIRED_FIELD',
+  INVALID_EMAIL_ADDRESS = 'INVALID_EMAIL_ADDRESS',
+  INVALID_DOCUMENT_ID = 'INVALID_DOCUMENT_ID',
+  DOCUMENT_NOT_FOUND = 'DOCUMENT_NOT_FOUND',
+  GOOGLE_API_ERROR = 'GOOGLE_API_ERROR',
+  GMAIL_API_ERROR = 'GMAIL_API_ERROR',
+  RATE_LIMITED = 'RATE_LIMITED',
+  INTERNAL_ERROR = 'INTERNAL_ERROR',
+}
+
+export class MCPToolError extends Error {
+  constructor(
+    public readonly code: ErrorCode,
+    message: string,
+    public readonly retryable: boolean = false
+  ) {
+    super(message);
+    this.name = 'MCPToolError';
+  }
+}

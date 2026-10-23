@@ -26,6 +26,14 @@ jobs:
         with:
           version: "0.12.12"
           enable-cache: true
+      # The MCP server is built first, so pytest also runs the real stdio round trip.
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: mcp-server/.nvmrc
+          cache: npm
+          cache-dependency-path: mcp-server/package-lock.json
+      - run: npm ci && npm test && npm run build
+        working-directory: mcp-server
       - run: uv sync --frozen
       - run: uv run pytest
       - run: uv run python -m support_reply.accept --offline --out "$RUNNER_TEMP/out"
@@ -92,3 +100,15 @@ jobs:
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8000/api/health && exit 0; sleep 1; done
           docker logs api
           exit 1
+      # The image can run the MCP server: with placeholder OAuth settings and no token,
+      # both tools answer AUTHENTICATION_REQUIRED without reaching Google.
+      - run: |
+          docker run --rm -e REPLY_DESK_MCP=on -e REPLY_DESK_DOC_ID=placeholder \
+            -e GOOGLE_CLIENT_ID=placeholder -e GOOGLE_CLIENT_SECRET=placeholder \
+            reply-desk-api python -c '
+          from support_reply.workspace import Step, deliver
+          record = {"session_id": "ci", "disposition": "reply", "reply": "Test."}
+          delivery = deliver(record, "Test.")
+          print(delivery.to_dict())
+          assert delivery.doc == delivery.email == Step("failed", "AUTHENTICATION_REQUIRED"), delivery
+          '
