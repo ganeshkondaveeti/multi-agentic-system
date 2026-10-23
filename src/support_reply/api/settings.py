@@ -26,6 +26,8 @@ class Settings:
     max_sessions: int = 200
     environment: str = "local"
     log_level: str = "INFO"
+    # Header that carries the caller's IP when a trusted proxy sets it (Render: CF-Connecting-IP).
+    client_ip_header: str | None = None
 
     def __post_init__(self) -> None:
         for name in ("rate_per_minute", "max_concurrent_runs", "max_body_bytes", "max_sessions"):
@@ -66,4 +68,5 @@ class Settings:
             max_concurrent_runs=number("REPLY_DESK_MAX_CONCURRENT_RUNS", defaults.max_concurrent_runs),
             environment=text("REPLY_DESK_ENV") or defaults.environment,
             log_level=(text("LOG_LEVEL") or defaults.log_level).upper(),
+            client_ip_header=text("REPLY_DESK_CLIENT_IP_HEADER"),
         )

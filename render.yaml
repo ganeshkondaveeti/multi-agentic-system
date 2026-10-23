@@ -1,0 +1,88 @@
+# Render Blueprint: the Reply Desk API and the web frontend. See docs/deployment-plan.md.
+# `sync: false` values are entered in the Render dashboard, never committed.
+services:
+  # FastAPI from the root Dockerfile on the free plan: one instance, sessions in memory,
+  # and approved records in the container's /data/out, which is wiped on every restart,
+  # deploy and spin-down. To keep records, set `plan: starter` and add a disk at
+  # /data/out (docs/deployment-plan.md, Phase 12, "Upgrading to keep records").
+  - type: web
+    name: reply-desk-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeployTrigger: checksPass
+    # Only API changes redeploy it, so web or docs commits do not drop open sessions.
+    buildFilter:
+      paths:
+        - Dockerfile
+        - .dockerignore
+        - pyproject.toml
+        - uv.lock
+        - .python-version
+        - src/**
+        - data/**
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ACCESS_CODE
+        generateValue: true
+      # The static site's URL, once known (Phase 11).
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: ALLOWED_ORIGIN_REGEX
+        sync: false
+      - key: REPLY_DESK_MODELS
+        value: auto
+      - key: REPLY_DESK_OUT_DIR
+        value: /data/out
+      - key: REPLY_DESK_ENV
+        value: production
+      # Cloudflare overwrites this on every request; Render's proxy is the last X-Forwarded-For hop.
+      - key: REPLY_DESK_CLIENT_IP_HEADER
+        value: CF-Connecting-IP
+      - key: LOG_LEVEL
+        value: INFO
+
+  # The Vite build of web/, served from Render's CDN.
+  - type: web
+    name: reply-desk-web
+    runtime: static
+    rootDir: web
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # The API's URL. Vite inlines it at build time, so a change needs a new deploy.
+      - key: VITE_API_BASE_URL
+        sync: false
+    # Paths with a built file are served as is; every other path is the SPA.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: Content-Security-Policy
+        value: "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' https://reply-desk-api.onrender.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable

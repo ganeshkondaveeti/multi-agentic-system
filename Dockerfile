@@ -1,4 +1,4 @@
-# Reply Desk API, as Railway runs it. Build: `docker build -t reply-desk-api .`
+# Reply Desk API, as Render runs it. Build: `docker build -t reply-desk-api .`
 #
 # The package finds `data/` by walking up from its own source file, so it is installed
 # editable (uv's default) with `src/` and `data/` side by side under /app.
@@ -25,8 +25,9 @@ COPY src/ src/
 COPY data/ data/
 RUN uv sync --frozen --no-dev
 
-# Approved records and email drafts go to /data/out. Railway mounts its volume there;
-# Railway volumes are owned by root, so set RAILWAY_RUN_UID=0 if writes are refused.
+# Approved records and email drafts go to /data/out. On Render's free plan that is the
+# container's own filesystem, wiped on every restart. On a paid plan a disk mounts here;
+# if writes are then refused, see Phase 9 step 5 of docs/deployment-plan.md.
 RUN useradd --system --uid 10001 --no-create-home app \
     && mkdir -p /data/out \
     && chown app /data/out
@@ -34,5 +35,5 @@ USER app
 
 EXPOSE 8000
 
-# Railway sets PORT. `exec` hands signals straight to uvicorn.
+# Render sets PORT. `exec` hands signals straight to uvicorn.
 CMD ["sh", "-c", "exec uvicorn support_reply.api.app:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'"]

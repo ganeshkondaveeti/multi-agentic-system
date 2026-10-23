@@ -49,7 +49,7 @@ class Approval:
 
 
 def default_out_dir() -> Path:
-    """`REPLY_DESK_OUT_DIR` when set (a Railway volume), else the repo `out/`. Gitignored."""
+    """`REPLY_DESK_OUT_DIR` when set (a Render disk), else the repo `out/`. Gitignored."""
     configured = os.environ.get(OUT_DIR_ENV, "").strip()
     if configured:
         return Path(configured)
