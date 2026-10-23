@@ -110,7 +110,7 @@ def create_app(settings: Settings | None = None, *, models: ModelsFactory | None
             raise ApiError(401, "access_code_required", f"Send a valid {ACCESS_HEADER} header.")
 
     def rate_limited(request: Request) -> None:
-        if not limiter.allow(client_ip(request)):
+        if not limiter.allow(client_ip(request, settings.client_ip_header)):
             raise ApiError(429, "rate_limited", "Too many turns from this address. Wait a minute.")
 
     def respond(request: Request, work: Callable[[Trace], dict[str, Any]]) -> Any:

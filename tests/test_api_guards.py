@@ -136,10 +136,10 @@ def test_cors_allows_the_listed_origin_and_rejects_others(api):
 
 
 def test_cors_regex_admits_preview_urls_only(api):
-    client = api(allowed_origin_regex=r"https://reply-desk-[a-z0-9-]+\.vercel\.app")
+    client = api(allowed_origin_regex=r"https://reply-desk-web-pr-\d+\.onrender\.com")
 
-    preview = _preflight(client, "https://reply-desk-git-feature-abc.vercel.app")
-    other = _preflight(client, "https://someone-else.vercel.app")
+    preview = _preflight(client, "https://reply-desk-web-pr-12.onrender.com")
+    other = _preflight(client, "https://someone-else.onrender.com")
 
     assert preview.status_code == 200
     assert other.status_code == 400
@@ -210,6 +210,49 @@ def test_the_rate_limit_keys_on_the_proxy_appended_hop(api):
     # A forged left-most hop does not buy a fresh bucket: the proxy's hop is the key.
     assert post("9.9.9.9, 10.0.0.1") == 429
     assert post("10.0.0.2") == 200
+
+
+def test_the_client_ip_header_keys_the_rate_limit_when_set(api):
+    # As on Render: every request shares the proxy's last X-Forwarded-For hop.
+    client = api(rate_per_minute=1, client_ip_header="CF-Connecting-IP")
+
+    def post(**headers):
+        return client.post(
+            "/api/sessions",
+            json={"complaint": CLEAN_HIT},
+            headers={"X-Forwarded-For": "1.1.1.1, 10.0.0.1", **headers},
+        ).status_code
+
+    assert post(**{"CF-Connecting-IP": "1.1.1.1"}) == 200
+    assert post(**{"CF-Connecting-IP": "2.2.2.2"}) == 200
+    assert post(**{"CF-Connecting-IP": "1.1.1.1"}) == 429
+    # Without the header, the last X-Forwarded-For hop is the key again.
+    assert post() == 200
+    assert post() == 429
+
+
+def test_the_client_ip_header_is_ignored_when_not_configured(api):
+    client = api(rate_per_minute=1)
+
+    def post(cf_ip):
+        return client.post(
+            "/api/sessions",
+            json={"complaint": CLEAN_HIT},
+            headers={"X-Forwarded-For": "10.0.0.1", "CF-Connecting-IP": cf_ip},
+        ).status_code
+
+    assert post("1.1.1.1") == 200
+    # A forged header does not buy a fresh bucket.
+    assert post("2.2.2.2") == 429
+
+
+def test_settings_read_the_client_ip_header_from_the_environment():
+    from support_reply.api.settings import Settings
+
+    assert Settings.from_env({}).client_ip_header is None
+    assert Settings.from_env({"REPLY_DESK_CLIENT_IP_HEADER": " CF-Connecting-IP "}).client_ip_header == (
+        "CF-Connecting-IP"
+    )
 
 
 def test_bodies_over_8kb_are_413_before_parsing(api):

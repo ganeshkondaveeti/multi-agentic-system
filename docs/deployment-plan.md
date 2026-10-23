@@ -1,33 +1,47 @@
-# Deployment Plan: Reply Desk frontend (Vercel) and backend (Railway)
+# Deployment Plan: Reply Desk backend and frontend on Render
 
-This plan turns the finished `support_reply` package (Phases 0–10 of `docs/implementation-plan.md`, plus the session CLI) into a web app. The backend is a FastAPI service on Railway. The frontend is a React app on Vercel, built from the Stitch designs in `design/stitch/` (moved from `stitch_reply_desk_fintech_dashboard/` in Phase 0). Everything runs locally first, then goes to GitHub, then deploys.
+This plan turns the finished `support_reply` package (Phases 0–10 of `docs/implementation-plan.md`, plus the session CLI) into a web app on Render. The backend is a FastAPI service running as a Render **web service** from the root `Dockerfile`. The frontend is a React app running as a Render **static site**, built from the Stitch designs in `design/stitch/`. Both are defined in one `render.yaml` Blueprint. Everything runs locally first, then goes to GitHub, then deploys.
 
 Every phase below has a testable exit and leaves the next phase able to build on it. The rules from the problem statement still hold in the web layer: facts-only, one citation, no PII stored or logged, three agents in parallel, one reviewer rework, five refinements, and nothing sent without a human approve. The web app adds no send action.
 
+## Status
+
+The earlier version of this plan targeted Railway (backend) and Vercel (frontend). Railway is not working for this project, and Render can host both halves, so the plan now targets Render only.
+
+- **Built and on GitHub:** Phases 0–8 (the API, the web app, the `Dockerfile`, the `Makefile`, and CI). They do not depend on the host, apart from a few leftovers that Phase 9 cleans up.
+- **Render readiness (Phase 9):** done. `render.yaml` is committed, `web/vercel.json` is gone, the Railway and Vercel wording is replaced, and the rate limit reads `CF-Connecting-IP` on Render. Step 5 (disk permissions) is applied only if Phase 10 needs it.
+- **Still to do:** Phases 10–12.
+
 ## Decisions
 
-- **One repo, two deploy targets.** The Python package stays at the repo root. The frontend lives in `web/`. Railway builds the root `Dockerfile`; Vercel builds `web/` only.
+- **One repo, one Blueprint, two Render services.** `render.yaml` at the repo root defines `reply-desk-api` (web service, Docker runtime, built from the root `Dockerfile`) and `reply-desk-web` (static site, root directory `web/`). The Python package stays at the repo root. The frontend lives in `web/`.
 - **Backend: FastAPI + uvicorn**, inside the existing package as `support_reply.api`. Endpoints are thin wrappers over `graph.handle_complaint`, `session.refine`, and `gate.approve`. No agent, reviewer, or gate logic moves into the API.
 - **Frontend: React + Vite + TypeScript + Tailwind CSS v3.** Tailwind v3 so the Stitch `tailwind.config` objects port directly. TanStack Query for server state, React Router for pages, and API types generated from the backend's OpenAPI schema with `openapi-typescript`.
-- **Sessions live in memory on one backend replica.** A session is a short complaint thread. Approved records persist on a Railway volume (`records.jsonl` and `email_drafts/`). A backend restart drops open sessions, never approved records. Railway runs exactly one replica.
-- **The browser calls Railway directly.** CORS allows only the Vercel origins. In local development, Vite proxies `/api` to `localhost:8000`, so there is no CORS locally.
+- **The API runs on a paid Starter instance with a persistent disk.** Approved records (`records.jsonl` and `email_drafts/`) live on a Render disk mounted at `/data/out`. Render's free web services cannot have a disk, and they spin down after 15 minutes idle, which would drop every open session and every record on each restart. The static site stays on the free plan.
+- **Sessions live in memory on one instance.** A session is a short complaint thread. A service with a disk cannot scale past one instance, which matches the in-memory store. A restart or deploy drops open sessions, never approved records. With a disk attached, Render stops the old instance before starting the new one, so each deploy has a short outage. That is acceptable for a demo.
+- **Region: Singapore** for both services. It is the Render region closest to the users of a Groww support desk.
+- **The browser calls the API directly.** CORS allows only the static site's origins. In local development, Vite proxies `/api` to `localhost:8000`, so there is no CORS locally. A static-site rewrite that proxies `/api` to the API would remove CORS, but it hides the caller's IP from the rate limiter and adds a hop in front of the SSE stream, so it is not used. Serving the web build from FastAPI would also remove CORS, but it gives up the static site's CDN and the ability to roll back the frontend and backend separately.
+- **The client IP comes from `CF-Connecting-IP` on Render.** Render's public services sit behind Cloudflare, which overwrites that header on every request. Render's own proxy appends its address to `X-Forwarded-For`, so the last hop, which the current code uses, is a proxy address and would put every user in one rate-limit bucket. The header to trust becomes a setting (Phase 9).
 - **Live trace over SSE.** The parallel fan-out is the core of the demo, so the trace streams while the graph runs. EventSource only supports GET, so the client reads a `fetch` response body as a stream.
 - **Model mode is a server setting.** `REPLY_DESK_MODELS=auto` uses Groq/Gemini when keys are set. `off` forces the cue tables for every request without touching the environment. CI, e2e tests, and the acceptance endpoint run with `off`.
 - **A shared access code guards the public URL.** Each turn costs three Groq calls and one Gemini call. If `ACCESS_CODE` is set, every `/api` call except `/api/health` needs the `X-Access-Code` header. This is a speed bump against quota abuse, not user auth.
-- **Stitch output is a design reference, not shipped code.** Markup is ported into components. Everything on screen comes from the API. Invented content is removed (see Phase 4).
+- **Deploys wait for CI.** Both services use Render's "After CI checks pass" auto-deploy trigger (`autoDeployTrigger: checksPass`), so a red `main` never ships.
+- **Stitch output is a design reference, not shipped code.** Markup is ported into components. Everything on screen comes from the API. Invented content is removed (see Phase 5).
 
 ## Topology
 
 ```mermaid
 flowchart LR
   Browser[Browser]
-  subgraph Vercel
-    Web[web/ static build<br/>React + Tailwind]
-  end
-  subgraph Railway["Railway (1 replica)"]
-    API[FastAPI support_reply.api]
-    Store[(In-memory sessions)]
-    Vol[(Volume /data/out<br/>records.jsonl, email_drafts/)]
+  subgraph Render["Render (Singapore)"]
+    subgraph Static["reply-desk-web (static site, CDN)"]
+      Web[web/dist<br/>React + Tailwind]
+    end
+    subgraph Service["reply-desk-api (web service, 1 instance)"]
+      API[FastAPI support_reply.api]
+      Store[(In-memory sessions)]
+      Disk[(Disk /data/out<br/>records.jsonl, email_drafts/)]
+    end
   end
   Groq[Groq: facts, pattern, compliance]
   Gemini[Gemini: reviewer]
@@ -35,7 +49,7 @@ flowchart LR
   Browser -->|HTML, JS| Web
   Browser -->|/api + SSE, X-Access-Code| API
   API --> Store
-  API --> Vol
+  API --> Disk
   API -->|redacted text only| Groq
   API -->|draft only| Gemini
 ```
@@ -44,7 +58,8 @@ flowchart LR
 
 ```
 .
-├── Dockerfile                 # Railway backend image
+├── render.yaml                # Blueprint: reply-desk-api + reply-desk-web
+├── Dockerfile                 # backend image Render builds
 ├── .dockerignore
 ├── .python-version            # 3.12
 ├── Makefile                   # dev-api, dev-web, test, e2e, docker-run
@@ -56,7 +71,7 @@ flowchart LR
 │   └── api/
 │       ├── __init__.py
 │       ├── app.py             # FastAPI app, CORS, access code, error handlers
-│       ├── settings.py        # env-driven settings (access code, origins, limits)
+│       ├── settings.py        # env-driven settings (access code, origins, limits, IP header)
 │       ├── service.py         # turn logic shared by the JSON and SSE routes
 │       ├── schemas.py         # pydantic response models mirroring to_dict()
 │       ├── store.py           # in-memory session store, TTL, per-session lock
@@ -65,7 +80,6 @@ flowchart LR
 ├── tests/                     # + test_api_*.py
 ├── web/
 │   ├── package.json / package-lock.json / .nvmrc (22)
-│   ├── vercel.json            # SPA rewrite, security headers
 │   ├── tailwind.config.ts     # merged Stitch tokens
 │   ├── index.html
 │   ├── src/
@@ -74,11 +88,11 @@ flowchart LR
 │   │   ├── pages/             # Workspace, Records, Acceptance
 │   │   └── main.tsx
 │   └── e2e/                   # Playwright specs
-├── design/stitch/             # moved from stitch_reply_desk_fintech_dashboard/
+├── design/stitch/             # Stitch reference screens
 └── .github/workflows/ci.yml
 ```
 
-`out/` stays gitignored. Locally it holds records from local approvals. On Railway the volume replaces it.
+`web/vercel.json` is gone: the SPA rewrite and the security headers move to the static site in `render.yaml`. `out/` stays gitignored. Locally it holds records from local approvals. On Render the disk replaces it.
 
 ## Dependency order
 
@@ -93,18 +107,19 @@ flowchart TD
   P6[Phase 6 History, records, acceptance pages]
   P7[Phase 7 Local full stack and hardening]
   P8[Phase 8 GitHub and CI]
-  P9[Phase 9 Railway backend]
-  P10[Phase 10 Vercel frontend]
-  P11[Phase 11 Production verification and operations]
+  P9[Phase 9 Render readiness in the repo]
+  P10[Phase 10 Render backend]
+  P11[Phase 11 Render frontend]
+  P12[Phase 12 Production verification and operations]
 
   P0 --> P1 --> P2 --> P3
   P0 --> P4
   P2 --> P5
   P3 --> P5
-  P4 --> P5 --> P6 --> P7 --> P8 --> P9 --> P10 --> P11
+  P4 --> P5 --> P6 --> P7 --> P8 --> P9 --> P10 --> P11 --> P12
 ```
 
-Phase 4 can start as soon as Phase 0 is done. It needs only the tokens and the markup, not the API.
+Phases 0–9 are built. Work resumes at Phase 10.
 
 ---
 
@@ -132,7 +147,7 @@ The package was built for one process and one user. Four small changes make it s
 **Build**
 
 1. **Cue-only mode without editing the environment.** Today `accept --offline` and `cli --offline` pop the API keys from `os.environ`. In a server that would switch off models for every concurrent request. Add a `llm.CUES_ONLY` sentinel: `classify_or_none` returns `None` for it without logging a failure. `handle_complaint`, `refine`, and `run` pass it through like any classifier. `REPLY_DESK_MODELS=off` makes the API pass `CUES_ONLY` for both the agents and the reviewer.
-2. **Configurable output directory.** `gate.default_out_dir()` reads `REPLY_DESK_OUT_DIR` first, then falls back to the repo `out/`. Railway sets it to the volume path.
+2. **Configurable output directory.** `gate.default_out_dir()` reads `REPLY_DESK_OUT_DIR` first, then falls back to the repo `out/`. Render sets it to the disk's mount path.
 3. **Provenance per node.** Each agent subgraph's classify step records whether its pick came from the model or the cues. The parent graph collects this in a `provenance` channel (`{"facts": "model" | "cues", ...}`, plus `reviewer`), returned by `graph.run` beside the session. This is not added to the contracts, so `Session.to_dict()` is unchanged. The UI shows a small `model` or `cues` tag on each agent card, so a quota fallback is visible.
 4. **Acceptance as data.** `accept.run_all` gains a structured report (`report() -> dict`): the 20 review ids with outcomes, four branches with traces and `agents_fired`, the advice turns, and both cap checks. The text output is built from that dict. The report writes approvals into a temporary directory, never into the real records.
 
@@ -179,9 +194,9 @@ The approve endpoint is the human click. It passes `human_approved=True` because
 
 **Guards (`app.py`, `limits.py`).**
 
-- CORS: `ALLOWED_ORIGINS` (comma-separated exact origins) plus an optional `ALLOWED_ORIGIN_REGEX` for Vercel preview URLs. Methods `GET, POST`. Headers `Content-Type, X-Access-Code`.
+- CORS: `ALLOWED_ORIGINS` (comma-separated exact origins) plus an optional `ALLOWED_ORIGIN_REGEX` for the static site's pull request previews. Methods `GET, POST`. Headers `Content-Type, X-Access-Code`.
 - Access code: when `ACCESS_CODE` is set, every `/api` route except `/api/health` compares `X-Access-Code` with `hmac.compare_digest` and returns 401 on a miss.
-- Rate limit: per-IP token bucket on model-backed routes (default 12 turns per minute), with the client IP taken from `X-Forwarded-For` behind Railway's proxy. A global semaphore allows two graph runs at once, so three parallel Groq calls per turn stay inside the free tier's 8,000 tokens per minute.
+- Rate limit: per-IP token bucket on model-backed routes (default 12 turns per minute). How the client IP is found behind a proxy is set in Phase 9. A global semaphore allows two graph runs at once, so three parallel Groq calls per turn stay inside the free tier's 8,000 tokens per minute.
 - Request bodies over 8 KB are rejected before they are parsed.
 
 **Exit**
@@ -345,15 +360,13 @@ State variants, driven by `draft.disposition` and `review.status`:
   - `make test` runs pytest and Vitest
   - `make e2e` starts the API with `REPLY_DESK_MODELS=off`, builds and previews the web app, and runs Playwright
   - `make docker-run` builds and runs the production image on port 8000
-- **`Dockerfile`** (root, used by Railway):
+- **`Dockerfile`** (root, built by Render):
   - `python:3.12-slim` base, plus the `uv` binary from the official uv image, pinned to the version you run locally
   - `uv sync --frozen --no-dev`
   - copies `src/` and `data/`, runs as a non-root user
   - `CMD uvicorn support_reply.api.app:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips="*"`
 - **`.dockerignore`**: `.venv`, `.env`, `out/`, `web/`, `design/`, `tests/`, `docs/`, `.pytest_cache`.
-- **`web/vercel.json`**:
-  - rewrite every path to `/index.html` (SPA)
-  - headers: `Content-Security-Policy` with `connect-src 'self' <railway-url>`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Permissions-Policy` denying camera, microphone, and geolocation
+- **Security headers and the SPA rewrite** were first written as `web/vercel.json`. Phase 9 moves them to the static site in `render.yaml`.
 - **Local env files**:
   - root `.env`: keys plus `REPLY_DESK_MODELS`, `ACCESS_CODE`, `ALLOWED_ORIGINS`, `REPLY_DESK_OUT_DIR`, `LOG_LEVEL`
   - `web/.env.local`: `VITE_API_BASE_URL` empty for the proxy
@@ -379,7 +392,7 @@ State variants, driven by `draft.disposition` and `review.status`:
   - `e2e`: start the API with `REPLY_DESK_MODELS=off`, `npx playwright install --with-deps chromium`, `npm run e2e`, and upload the Playwright report on failure
   - `docker`: `docker build .` (no push)
   - CI needs no secrets: every job runs on the cue tables.
-- Protect `main`: require the four jobs and a pull request.
+- Protect `main`: require the four jobs and a pull request. Render's `checksPass` trigger (Phase 10) reads these same checks.
 
 **Exit**
 
@@ -388,60 +401,180 @@ State variants, driven by `draft.disposition` and `review.status`:
 
 ---
 
-## Phase 9 — Railway backend
+## Phase 9 — Render readiness in the repo
+
+Everything Render needs is committed and tested before anything is created in the Render dashboard.
 
 **Build**
 
-- In Railway, create a project from the GitHub repo, with a service that builds the root `Dockerfile` from `main`. If your plan offers it, turn on the setting that waits for GitHub checks before deploying.
-- Add a **volume** mounted at `/data/out`. Set the replica count to 1: the session store is in memory.
-- **Variables**:
+1. **Client IP behind Render's proxy.** Today `limits.client_ip` takes the last `X-Forwarded-For` hop, which was the client on Railway. On Render it is a proxy address, so every caller would share one rate-limit bucket. Add a setting `REPLY_DESK_CLIENT_IP_HEADER` to `Settings.from_env`:
+   - When set (Render: `CF-Connecting-IP`), `client_ip` reads that header first. Cloudflare overwrites it on every request to a public Render service, so a caller cannot forge it there.
+   - When the header is missing, or the setting is unset (local, `make docker-run`, CI), the current rule stays: the last `X-Forwarded-For` hop, then the socket peer.
+   - Set it only on a host that sits behind Cloudflare. Anywhere else, a client could send the header and pick its own bucket.
+2. **`render.yaml` Blueprint** at the repo root:
+
+   ```yaml
+   services:
+     - type: web
+       name: reply-desk-api
+       runtime: docker
+       plan: starter
+       region: singapore
+       dockerfilePath: ./Dockerfile
+       dockerContext: .
+       healthCheckPath: /api/health
+       autoDeployTrigger: checksPass
+       buildFilter:
+         paths:
+           - Dockerfile
+           - .dockerignore
+           - pyproject.toml
+           - uv.lock
+           - .python-version
+           - src/**
+           - data/**
+       disk:
+         name: reply-desk-out
+         mountPath: /data/out
+         sizeGB: 1
+       envVars:
+         - key: GROQ_API_KEY
+           sync: false
+         - key: GEMINI_API_KEY
+           sync: false
+         - key: ACCESS_CODE
+           generateValue: true
+         - key: ALLOWED_ORIGINS
+           sync: false
+         - key: ALLOWED_ORIGIN_REGEX
+           sync: false
+         - key: REPLY_DESK_MODELS
+           value: auto
+         - key: REPLY_DESK_OUT_DIR
+           value: /data/out
+         - key: REPLY_DESK_ENV
+           value: production
+         - key: REPLY_DESK_CLIENT_IP_HEADER
+           value: CF-Connecting-IP
+         - key: LOG_LEVEL
+           value: INFO
+
+     - type: web
+       name: reply-desk-web
+       runtime: static
+       rootDir: web
+       buildCommand: npm ci && npm run build
+       staticPublishPath: ./dist
+       autoDeployTrigger: checksPass
+       envVars:
+         - key: NODE_VERSION
+           value: "22"
+         - key: VITE_API_BASE_URL
+           sync: false
+       routes:
+         - type: rewrite
+           source: /*
+           destination: /index.html
+       headers:
+         - path: /*
+           name: Content-Security-Policy
+           value: "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' https://reply-desk-api.onrender.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+         - path: /*
+           name: X-Content-Type-Options
+           value: nosniff
+         - path: /*
+           name: Referrer-Policy
+           value: no-referrer
+         - path: /*
+           name: Permissions-Policy
+           value: camera=(), microphone=(), geolocation=()
+         - path: /*
+           name: X-Frame-Options
+           value: DENY
+         - path: /assets/*
+           name: Cache-Control
+           value: public, max-age=31536000, immutable
+   ```
+
+   Notes on the Blueprint:
+   - `sync: false` values are never in the repo. Render asks for them when the Blueprint is first applied.
+   - `generateValue: true` makes Render create a random `ACCESS_CODE`. Copy it from the dashboard and share it with demo users out of band.
+   - `rootDir: web` means only changes under `web/` redeploy the static site. `buildFilter` does the same for the API, so a docs-only or web-only commit does not restart it and drop open sessions.
+   - Render does not apply a rewrite to a path where a file exists, so `/assets/*` is served as built and every other path falls back to `index.html`.
+   - The CSP names `reply-desk-api.onrender.com`. If Render adds a suffix because the name is taken, Phase 11 corrects it.
+   - No service sets `branch`, so both deploy from the repo's default branch, `main`.
+3. **Delete `web/vercel.json`.** Its rewrite and headers now live in `render.yaml`.
+4. **Replace the Railway and Vercel wording:**
+   - `Dockerfile`: header comment says Render builds the image, and the `RAILWAY_RUN_UID` note becomes the Render disk note below.
+   - `gate.py` (`default_out_dir` docstring), `limits.py` (`client_ip` docstring), and the `Makefile` comment on `docker-run`.
+   - `.env.example`: comments for `ACCESS_CODE` and `ALLOWED_ORIGIN_REGEX` refer to Render. Add `REPLY_DESK_CLIENT_IP_HEADER`, blank, with a one-line comment.
+   - `web/.env.example`: `VITE_API_BASE_URL` comment names the Render API URL.
+   - `README.md`: the deploy section describes `render.yaml`, and the status line points at this plan's Phases 10–12.
+5. **Disk permissions.** The image runs as the non-root user `app` (uid 10001) and owns `/data/out` at build time. A Render disk mounted over that path may be owned by root. Keep the non-root user. If Phase 10 shows that approve cannot write, add a small entrypoint that runs as root, `chown`s `/data/out` to `app`, and then starts uvicorn as `app` with `setpriv`, which is already in the slim image. Do not drop the `USER` line instead.
+
+**Exit**
+
+- New tests in `tests/test_api_guards.py`:
+  - with `REPLY_DESK_CLIENT_IP_HEADER=CF-Connecting-IP`, two requests with different `CF-Connecting-IP` values and the same `X-Forwarded-For` land in different buckets
+  - with the setting, a request without the header falls back to the last `X-Forwarded-For` hop
+  - without the setting, a forged `CF-Connecting-IP` is ignored
+- `uv run pytest`, `make test`, `make e2e`, and `make docker-run` still pass.
+- `git grep -n -i -E 'railway|vercel'` finds nothing outside `docs/`.
+- `render.yaml` validates: the Render dashboard's Blueprint preview (or `render blueprints validate` with the Render CLI) shows two services and no errors.
+- CI is green on the pull request that carries these changes.
+
+---
+
+## Phase 10 — Render backend
+
+**Build**
+
+- In the Render dashboard, choose **New → Blueprint**, connect the GitHub repo, and select `render.yaml` on `main`. Render shows both services. Enter the `sync: false` values:
 
   | Name | Value |
   |---|---|
-  | `GROQ_API_KEY`, `GEMINI_API_KEY` | Your keys (Railway variables, never in the repo) |
-  | `GROQ_MODEL`, `GEMINI_MODEL` | Optional; the defaults are in `llm.py` |
-  | `REPLY_DESK_MODELS` | `auto` |
-  | `REPLY_DESK_OUT_DIR` | `/data/out` |
-  | `ACCESS_CODE` | A long random string, shared with demo users out of band |
-  | `ALLOWED_ORIGINS` | Filled in Phase 10 with the Vercel production URL |
-  | `ALLOWED_ORIGIN_REGEX` | Optional, for Vercel preview URLs of this project only |
-  | `LOG_LEVEL` | `INFO` |
+  | `GROQ_API_KEY`, `GEMINI_API_KEY` | Your keys |
+  | `ALLOWED_ORIGINS` | Leave blank for now; filled in Phase 11 |
+  | `ALLOWED_ORIGIN_REGEX` | Leave blank |
+  | `VITE_API_BASE_URL` (static site) | `https://reply-desk-api.onrender.com`, or leave blank until the API URL is known |
 
-  Railway provides `PORT`.
-- Health check path `/api/health`. Generate a public Railway domain.
+  `GROQ_MODEL` and `GEMINI_MODEL` are optional; the defaults are in `llm.py`. Render sets `PORT`, and the `Dockerfile` reads it.
+- Apply the Blueprint. The API builds the `Dockerfile`, mounts the disk at `/data/out`, and goes live once `/api/health` answers.
+- Note the API's public URL from its dashboard page. If it is not `https://reply-desk-api.onrender.com`, update the CSP `connect-src` in `render.yaml` in a pull request.
+- Copy the generated `ACCESS_CODE` from the API's Environment page.
 
 **Exit**
 
-- `curl https://<service>.up.railway.app/api/health` shows `groq` and `gemini` as the model modes.
+- `curl https://reply-desk-api.onrender.com/api/health` shows `groq` and `gemini` as the model modes and `production` as the environment.
 - With the access code, a `POST /api/sessions` clean hit returns `escalate` with the large-cap citation, and `provenance` shows `model` for all four nodes.
+- A streamed `POST /api/sessions` with `Accept: text/event-stream` (`curl -N`) prints `trace` events one by one, not all at the end.
 - `POST /api/acceptance/run` returns PASS.
-- Approve one session, redeploy the service, and the record is still listed by `GET /api/records`, because it lives on the volume.
-- The Railway logs for a PII complaint show `[PAN]`, never the raw value.
+- Approve one session. It is listed by `GET /api/records`. Trigger a manual deploy, and the record is still listed, because it lives on the disk. If approve fails with a permission error, apply the entrypoint fix from Phase 9 step 5 and repeat.
+- The Render logs for a PII complaint show `[PAN]`, never the raw value.
+- Rate limit by caller: 12 turns from one network, then the 13th gets 429, while a second network (a phone hotspot) still gets answers. If both networks are limited together, the client IP header is not being read.
 
 ---
 
-## Phase 10 — Vercel frontend
+## Phase 11 — Render frontend
 
 **Build**
 
-- In Vercel, import the GitHub repo with these settings:
-  - Root Directory `web`
-  - Framework preset Vite
-  - Install `npm ci`, Build `npm run build`, Output `dist`
-  - Node 22
-- **Environment variables**: `VITE_API_BASE_URL=https://<service>.up.railway.app` for Production and Preview. Vite inlines it at build time, so changing it needs a redeploy.
-- Put the Railway URL into the `connect-src` of the CSP in `web/vercel.json`.
-- Back in Railway, set `ALLOWED_ORIGINS` to the Vercel production URL (and any custom domain). Optionally set `ALLOWED_ORIGIN_REGEX` for this project's preview URLs. Redeploy the backend.
+- The static site was created with the Blueprint in Phase 10. If `VITE_API_BASE_URL` was left blank, set it now to the API's URL. Vite inlines it at build time, so changing it needs a new deploy of the static site (Render offers this when you save the variable).
+- Note the static site's URL (`https://reply-desk-web.onrender.com` or with a suffix).
+- On the API, set `ALLOWED_ORIGINS` to that URL, plus any custom domain, comma-separated with no trailing slash. Saving the variable redeploys the API.
+- **Pull request previews (optional).** Turn on previews for the static site only, not the API: an API preview would be a second paid instance with no disk. Previews build with the production `VITE_API_BASE_URL`, so they call the production API and still need the access code. Open a test pull request, read the preview's URL, and set `ALLOWED_ORIGIN_REGEX` on the API to match only this site's previews, for example `^https://reply-desk-web-pr-\d+\.onrender\.com$`. Leave it blank if previews stay off.
+- **Custom domain (optional).** Add it to the static site in Render, point DNS as Render shows, and add the domain to `ALLOWED_ORIGINS`.
 
 **Exit**
 
-- The production URL loads, asks for the access code, and shows model mode and corpus date in the header.
-- Browser dev tools show no CORS errors, and the SSE stream arrives incrementally rather than all at once.
-- A preview deployment from a pull request reaches the API if the regex is set, and is rejected if it is not.
+- The production URL loads, asks for the access code, and shows `production`, the model mode, and the corpus date in the header.
+- A deep link such as `/s/<id>` or `/records`, opened in a new tab, loads the app, not a 404.
+- Browser dev tools show no CORS errors and no CSP violations, the response headers include the CSP and `X-Frame-Options: DENY`, and the SSE stream arrives incrementally.
+- If previews are on: a preview reaches the API when the regex is set, and is rejected by CORS when it is not.
 
 ---
 
-## Phase 11 — Production verification and operations
+## Phase 12 — Production verification and operations
 
 **Build: the production smoke checklist** (run after every release; the Playwright suite can also target the production URL with an `E2E_BASE_URL` and the access code):
 
@@ -455,15 +588,18 @@ State variants, driven by `draft.disposition` and `review.status`:
 
 **Operations**
 
-- **Rollback:** Railway redeploys the previous deployment; Vercel promotes the previous deployment. They are independent, so roll back the side that broke.
-- **Keys:** rotate the Groq and Gemini keys and the access code by changing Railway variables, then redeploy. Nothing in the frontend changes except users entering the new code.
-- **Quota:** watch the per-agent `provenance`. A run of `cues` in production means the Groq free tier is exhausted. Raise the plan or lower the rate limit.
-- **Records:** `records.jsonl` grows by one line per approve. Back it up from the volume when needed. It contains redacted text only.
+- **Deploys:** merge to `main`, CI goes green, then Render deploys whichever service the change touched. An API deploy has a short outage and drops open sessions, because the disk-backed instance is stopped before the new one starts. Deploy the API outside demo hours.
+- **Rollback:** each service's Events page lists past deploys, and **Rollback** redeploys an earlier one. The two services are independent, so roll back only the side that broke. After a rollback, check that the service's auto-deploy setting is still what you want, so the next merge does not undo or skip the fix.
+- **Keys:** rotate the Groq and Gemini keys and the access code by changing the API's environment variables. Saving redeploys the API. Nothing in the frontend changes except users entering the new code.
+- **Quota:** watch the per-agent `provenance`. A run of `cues` in production means the Groq free tier is exhausted. Raise the plan or lower `REPLY_DESK_RATE_PER_MINUTE`.
+- **Records:** `records.jsonl` grows by one line per approve and contains redacted text only. Render snapshots paid disks daily, and a snapshot can be restored from the disk's settings. For a copy you keep, open the API's Shell in the dashboard and print or copy the file out.
+- **Cost:** the API is the only paid part (Starter instance plus a 1 GB disk). The static site is free. To pause the demo, suspend the API service: the disk and its records are kept.
 
 **Exit**
 
 - The smoke checklist passes on the production URLs.
-- One rollback has been rehearsed on each platform.
+- One rollback has been rehearsed on each service.
+- One disk snapshot is visible in the API's disk settings.
 
 ---
 
@@ -471,24 +607,27 @@ State variants, driven by `draft.disposition` and `review.status`:
 
 - **User accounts and roles.** The access code is a shared gate, not authentication. An operator name on records needs real auth first.
 - **Sending email, or any client that could send it.** Approve writes a draft file, as in Milestone 2.
-- **More than one backend replica.** That needs the session store moved to Redis or SQLite on the volume first.
-- **A database for records.** `records.jsonl` on a volume is enough for a demo, and it keeps the gate's single append path.
+- **More than one backend instance, or zero-downtime API deploys.** Both need the session store moved off the instance (Render Key Value, or Postgres) and the records off the disk.
+- **A database for records.** `records.jsonl` on a disk is enough for a demo, and it keeps the gate's single append path.
+- **Render's free web service tier for the API.** It has no disk and spins down when idle, so records and sessions would not survive.
+- **Full-stack preview environments.** Only the static site gets pull request previews, and they use the production API.
 - **Stitch screens shipped as-is**, or any of the invented metrics, compliance labels, or fake data they contained.
-- **Live-model acceptance in CI.** CI stays on the cue tables, so it needs no secrets and burns no quota. Live checks are the Phase 11 smoke list.
+- **Live-model acceptance in CI.** CI stays on the cue tables, so it needs no secrets and burns no quota. Live checks are the Phase 12 smoke list.
 
 ## Suggested build schedule
 
-| Phase | Focus | Depends on |
-|---|---|---|
-| 0 | Git, ignore rules, design folder, Python pin | — |
-| 1 | Cues-only sentinel, out dir, provenance, acceptance report | 0 |
-| 2 | FastAPI routes, store, guards, PII-safe errors | 1 |
-| 3 | SSE trace stream | 2 |
-| 4 | Vite app, merged Stitch tokens, shell, typed client | 0 |
-| 5 | Workspace and its states | 2, 3, 4 |
-| 6 | History drawer, records, acceptance pages | 5 |
-| 7 | Makefile, Dockerfile, vercel.json, full local run, PII audit | 6 |
-| 8 | GitHub repo, CI, branch protection | 7 |
-| 9 | Railway service, volume, variables | 8 |
-| 10 | Vercel project, env, CORS handshake | 9 |
-| 11 | Production smoke, rollback rehearsal | 10 |
+| Phase | Focus | Depends on | Status |
+|---|---|---|---|
+| 0 | Git, ignore rules, design folder, Python pin | — | Built |
+| 1 | Cues-only sentinel, out dir, provenance, acceptance report | 0 | Built |
+| 2 | FastAPI routes, store, guards, PII-safe errors | 1 | Built |
+| 3 | SSE trace stream | 2 | Built |
+| 4 | Vite app, merged Stitch tokens, shell, typed client | 0 | Built |
+| 5 | Workspace and its states | 2, 3, 4 | Built |
+| 6 | History drawer, records, acceptance pages | 5 | Built |
+| 7 | Makefile, Dockerfile, full local run, PII audit | 6 | Built |
+| 8 | GitHub repo, CI, branch protection | 7 | Built |
+| 9 | Client IP header, `render.yaml`, remove Vercel and Railway leftovers | 8 | Built |
+| 10 | Render Blueprint, API service, disk, variables | 9 | To do |
+| 11 | Static site, API URL, CORS handshake, previews | 10 | To do |
+| 12 | Production smoke, rollback rehearsal, snapshots | 11 | To do |
