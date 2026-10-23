@@ -48,7 +48,7 @@ TASK_COMPLIANCE = "compliance"
 TASK_REVIEW = "review"
 
 DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b"
-DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+DEFAULT_GEMINI_MODEL = "gemini-3.5-flash"
 _TIMEOUT_SECONDS = 20.0
 # Free tier for gpt-oss is 8_000 tokens per minute, prompt plus completion,
 # and reasoning tokens count. Facts, Pattern, and Compliance each make one
@@ -64,6 +64,11 @@ _LOW_REASONING_MODELS = frozenset(
         "qwen/qwen3.8-27b",
     }
 )
+# Gemini 3 thinks by default, and at the default level one review can outlast the
+# timeout. The review is a short JSON scan, so thinking stays low. Gemini 2.5 takes
+# a token budget instead of a level, so it gets no thinking setting.
+GEMINI_THINKING_LEVEL = "low"
+_GEMINI_THINKING_LEVEL_PREFIX = "gemini-3"
 
 _COMPLAINT_PREAMBLE = (
     "You classify one redacted support complaint. "
@@ -228,17 +233,25 @@ class GeminiClassifier:
         response = self._client.models.generate_content(
             model=self.model,
             contents=redacted_text,
-            config={
-                "system_instruction": system,
-                "temperature": 0,
-                "seed": 0,
-                "response_mime_type": "application/json",
-            },
+            config=_gemini_config(self.model, system),
         )
         content = getattr(response, "text", None)
         if not isinstance(content, str) or not content.strip():
             raise ValueError("model response is empty")
         return parse_json_object(content)
+
+
+def _gemini_config(model: str, system: str) -> dict[str, Any]:
+    """Generation config for one Gemini review call."""
+    config: dict[str, Any] = {
+        "system_instruction": system,
+        "temperature": 0,
+        "seed": 0,
+        "response_mime_type": "application/json",
+    }
+    if model.startswith(_GEMINI_THINKING_LEVEL_PREFIX):
+        config["thinking_config"] = {"thinking_level": GEMINI_THINKING_LEVEL}
+    return config
 
 
 def _groq_limits(model: str) -> dict[str, Any]:
