@@ -76,12 +76,20 @@ class RunSlots:
             self._slots.release()
 
 
-def client_ip(request: Request) -> str:
-    """The caller's IP. Behind Railway's proxy, the last `X-Forwarded-For` hop.
+def client_ip(request: Request, header: str | None = None) -> str:
+    """The caller's IP: `header` when set and present, else the last `X-Forwarded-For` hop.
 
-    The last entry is the one the proxy itself appended, so a client cannot pick
-    its own rate-limit key by sending a forged header.
+    On Render, `header` is `CF-Connecting-IP`: Cloudflare overwrites it on every request,
+    while the last `X-Forwarded-For` hop is Render's own proxy. Set `header` only behind
+    a proxy that overwrites it, or a client can pick its own rate-limit key.
+
+    Without `header`, the last `X-Forwarded-For` entry is the one a single proxy appended,
+    so a forged left-most entry does not change the key.
     """
+    if header:
+        value = request.headers.get(header, "").strip()
+        if value:
+            return value
     forwarded = request.headers.get("x-forwarded-for", "")
     hops = [hop.strip() for hop in forwarded.split(",") if hop.strip()]
     if hops:

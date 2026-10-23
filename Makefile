@@ -47,7 +47,7 @@ docker-build:
 	docker build -t $(IMAGE) .
 
 # Keys and settings come from .env when it exists. Records persist in the named volume,
-# as they do on Railway's.
+# as they do on Render's disk.
 docker-run: docker-build
 	docker run --rm -p $(API_PORT):8000 $(if $(wildcard .env),--env-file .env) \
 		-e REPLY_DESK_OUT_DIR=/data/out \

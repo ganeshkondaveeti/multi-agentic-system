@@ -58,6 +58,7 @@ Routes live under `/api`: `health`, `sessions` (create, list, get), `sessions/{i
 | `ALLOWED_ORIGINS`, `ALLOWED_ORIGIN_REGEX` | CORS origins for the web frontend (none by default) |
 | `REPLY_DESK_RATE_PER_MINUTE` | Turns per minute per client IP (default 12) |
 | `REPLY_DESK_MAX_CONCURRENT_RUNS` | Graph runs at once (default 2) |
+| `REPLY_DESK_CLIENT_IP_HEADER` | Header that carries the caller's IP for the rate limit (Render: `CF-Connecting-IP`). Unset, the last `X-Forwarded-For` hop is used. Set it only behind a proxy that overwrites the header. |
 | `REPLY_DESK_ENV`, `LOG_LEVEL` | Environment label shown by `/api/health` (default `local`), log level (default `INFO`) |
 
 Sessions live in memory for 2 idle hours; approved records persist in `REPLY_DESK_OUT_DIR`. Approving closes a session.
@@ -93,12 +94,14 @@ make dev                      # API on :8000 with reload, web on http://localhos
 | `make test` | pytest, then Vitest. Offline. |
 | `make e2e` | Playwright. Its config starts the API with `REPLY_DESK_MODELS=off` and a preview build, so it is offline and leaves `out/` alone. |
 | `make stack-check` | Starts the API with the production server command and a web build that calls it directly, so every request crosses origins through CORS. Runs the Playwright suite against them, then greps the API log (at `DEBUG`) and the records directory for the fixture PAN and phone. Offline. |
-| `make docker-run` | Builds the production image (`Dockerfile`, the one Railway uses) and runs it on :8000. It reads keys from `.env` and keeps records in the `reply-desk-out` Docker volume. |
+| `make docker-run` | Builds the production image (`Dockerfile`, the one Render builds) and runs it on :8000. It reads keys from `.env` and keeps records in the `reply-desk-out` Docker volume. |
 | `make preview-direct` | Builds the web app with `VITE_API_BASE_URL=http://localhost:8000` and previews it on http://localhost:4173. Use it with `make docker-run` to drive the image from the browser. `docker-run` already allows that origin. |
 
 Env files: the root `.env` holds the keys and the serving variables above. `web/.env.local` holds `VITE_API_BASE_URL`, which is empty locally so the Vite proxy is used. Both are gitignored; `.env.example` and `web/.env.example` document them.
 
-`web/vercel.json` rewrites every path to `index.html` and sets the security headers. Its CSP `connect-src` allows `https://*.up.railway.app` until the Railway URL is known; narrow it to that host when deploying (Phase 10 of `docs/deployment-plan.md`).
+## Deploying on Render
+
+`render.yaml` is a Render Blueprint with two services: `reply-desk-api`, a web service built from the `Dockerfile` with a disk at `/data/out` for approved records, and `reply-desk-web`, a static site built from `web/`. The static site rewrites every path to `index.html` and sets the security headers. Its CSP `connect-src` names `https://reply-desk-api.onrender.com`; change it if Render gives the API a different URL. Both services deploy from `main` after CI passes. The steps are Phases 10–12 of `docs/deployment-plan.md`.
 
 ## Layout
 
@@ -110,10 +113,11 @@ docs/                problem statement, architecture, implementation plan, deplo
 web/                 React frontend (Vite, Tailwind, Vitest, Playwright)
 design/stitch/       Stitch UI designs for the web frontend (reference only, not built)
 scripts/             live-model verification, web fixture capture, the local stack check
-Dockerfile           the API image Railway builds
+Dockerfile           the API image Render builds
+render.yaml          Render Blueprint: the API service and the static site
 Makefile             local full-stack targets
 ```
 
 ## Status
 
-The package is complete against `docs/implementation-plan.md`. The web app runs locally as a full stack (Phases 0–7 of `docs/deployment-plan.md`). GitHub CI and the Railway and Vercel deploys come next.
+The package is complete against `docs/implementation-plan.md`. The web app runs locally as a full stack, and CI runs on GitHub (Phases 0–8 of `docs/deployment-plan.md`). The repo is ready for Render (Phase 9); the Render deploy comes next (Phases 10–12).
