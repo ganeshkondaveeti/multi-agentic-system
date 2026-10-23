@@ -27,7 +27,7 @@ cp .env.example .env   # then fill in GROQ_API_KEY and GEMINI_API_KEY, or leave 
 | Variable | Purpose |
 |---|---|
 | `GROQ_API_KEY`, `GROQ_MODEL` | Agent classifier (default model `openai/gpt-oss-120b`) |
-| `GEMINI_API_KEY`, `GEMINI_MODEL` | Reviewer second opinion (default `gemini-2.5-flash`) |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | Reviewer second opinion (default `gemini-3.5-flash`) |
 | `REPLY_DESK_MODELS` | `auto` (default) uses models when keys are set; `off` forces the cue tables |
 | `REPLY_DESK_OUT_DIR` | Where approved records and email drafts go (default `out/`) |
 

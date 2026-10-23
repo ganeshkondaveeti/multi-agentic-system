@@ -28,6 +28,7 @@ from support_reply.gate import ApprovalRefused, approvable, require_approvable
 from support_reply.graph import REWRITE_NODE, handle_complaint
 from support_reply.llm import (
     DEFAULT_GEMINI_MODEL,
+    GEMINI_THINKING_LEVEL,
     TASK_REVIEW,
     GeminiClassifier,
     default_classifier,
@@ -376,12 +377,29 @@ def test_gemini_sends_the_draft_as_content_and_the_rules_as_system_instruction()
     assert system == instructions(TASK_REVIEW, {"check": ("advice", "performance")})
     assert "advice" in system and "performance" in system and "span" in system
     assert reply not in system and "test-key" not in system
+    assert sent["config"]["thinking_config"] == {"thinking_level": GEMINI_THINKING_LEVEL}
 
     with pytest.raises(ValueError):
         GeminiClassifier(api_key=" ", model=DEFAULT_GEMINI_MODEL, client=client)
     client.models.generate_content = lambda **kwargs: SimpleNamespace(text="")
     with pytest.raises(ValueError):
         classifier.classify(task=TASK_REVIEW, redacted_text=reply, allowed={"check": ("advice",)})
+
+
+def test_gemini_2_5_gets_no_thinking_level():
+    class _Models:
+        kwargs = None
+
+        def generate_content(self, **kwargs):
+            _Models.kwargs = kwargs
+            return SimpleNamespace(text='{"failures": []}')
+
+    client = SimpleNamespace(models=_Models())
+    classifier = GeminiClassifier(api_key="test-key", model="gemini-2.5-pro", client=client)
+
+    classifier.classify(task=TASK_REVIEW, redacted_text="Some reply.", allowed={"check": ("advice",)})
+
+    assert "thinking_config" not in _Models.kwargs["config"]
 
 
 def test_a_grounded_model_finding_fails_the_review_and_the_rewrite_drops_it():
