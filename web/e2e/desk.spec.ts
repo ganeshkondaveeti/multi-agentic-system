@@ -2,6 +2,31 @@ import { expect, test, type Page } from "@playwright/test";
 
 // The same inputs as support_reply.fixtures, driven through the browser against the
 // real API with models off.
+//
+// Against a deployed site (E2E_BASE_URL), set E2E_API_URL to the API's origin and
+// E2E_ACCESS_CODE when the API requires one. The header test then expects production
+// with live models, unless E2E_EXPECT_ENV and E2E_EXPECT_MODELS say otherwise.
+const DEPLOYED = Boolean(process.env.E2E_BASE_URL);
+const API_URL = process.env.E2E_API_URL ?? "";
+const ACCESS_CODE = process.env.E2E_ACCESS_CODE;
+const API_HEADERS: Record<string, string> = ACCESS_CODE ? { "X-Access-Code": ACCESS_CODE } : {};
+const EXPECT_ENV = process.env.E2E_EXPECT_ENV ?? (DEPLOYED ? "production" : "e2e");
+const EXPECT_MODELS = process.env.E2E_EXPECT_MODELS ?? (DEPLOYED ? "Groq agents · Gemini reviewer" : "Models off");
+
+// The web client keeps the code in sessionStorage (src/api/access.ts).
+test.beforeEach(async ({ page }) => {
+  if (ACCESS_CODE) {
+    await page.addInitScript((code) => sessionStorage.setItem("reply-desk.access-code", code), ACCESS_CODE);
+  }
+});
+
+function apiGet(page: Page, path: string) {
+  return page.request.get(`${API_URL}${path}`, { headers: API_HEADERS });
+}
+
+function apiPost(page: Page, path: string, data: unknown) {
+  return page.request.post(`${API_URL}${path}`, { headers: API_HEADERS, data });
+}
 const CLEAN_HIT = "Why was I charged an exit load on HDFC Large Cap Fund?";
 const CORPUS_MISS = "My order failed on Nippon Small Cap";
 const RECURRING = "Why is there an exit load fee on my HDFC Mid Cap Fund redemption?";
@@ -42,9 +67,9 @@ async function traceNodes(page: Page): Promise<string[]> {
 
 test("the header reads model mode and corpus date from the API", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByTestId("model-mode")).toContainText("Models off");
+  await expect(page.getByTestId("model-mode")).toContainText(EXPECT_MODELS);
   await expect(page.getByTestId("corpus-date")).toContainText("25-Jun-2026");
-  await expect(page.getByTestId("env-badge")).toHaveText("e2e");
+  await expect(page.getByTestId("env-badge")).toHaveText(EXPECT_ENV);
 });
 
 test.describe("the four branches", () => {
@@ -92,9 +117,9 @@ test.describe("the four branches", () => {
 
     const stored = await page.evaluate(() => JSON.stringify({ ...localStorage }) + JSON.stringify({ ...sessionStorage }));
     const fromApi = [
-      await (await page.request.get(`/api/sessions/${id}`)).text(),
-      await (await page.request.get("/api/records")).text(),
-      await (await page.request.get(`/api/records/${id}/email`)).text(),
+      await (await apiGet(page, `/api/sessions/${id}`)).text(),
+      await (await apiGet(page, "/api/records")).text(),
+      await (await apiGet(page, `/api/records/${id}/email`)).text(),
     ];
     const seen = await Promise.all(responses);
     expect(seen.length).toBeGreaterThan(0);
@@ -147,7 +172,7 @@ test("refinements re-run only the named agents, the history shows it, and the si
   await expect(page.getByTestId("refine-limit")).toContainText("Refinement limit reached, last reviewed draft kept.");
   await expect(page.getByTestId("refine-input")).toHaveCount(0);
 
-  const sixth = await page.request.post(`/api/sessions/${id}/refine`, { data: { pushback: "Shorter" } });
+  const sixth = await apiPost(page, `/api/sessions/${id}/refine`, { pushback: "Shorter" });
   expect(sixth.status()).toBe(409);
   expect((await sixth.json()).error).toBe("refinement_refused");
 });
@@ -186,7 +211,7 @@ test("approve writes a record the Records page lists, with its email draft", asy
 });
 
 test("the acceptance page runs to PASS and leaves the real records unchanged", async ({ page }) => {
-  const before = (await (await page.request.get("/api/records")).json()).length;
+  const before = (await (await apiGet(page, "/api/records")).json()).length;
 
   await page.goto("/acceptance");
   await page.getByTestId("run-acceptance").click();
@@ -194,6 +219,6 @@ test("the acceptance page runs to PASS and leaves the real records unchanged", a
   await expect(page.getByTestId("review-row")).toHaveCount(20);
   await expect(page.getByTestId("branch-pii")).toBeVisible();
 
-  const after = (await (await page.request.get("/api/records")).json()).length;
+  const after = (await (await apiGet(page, "/api/records")).json()).length;
   expect(after).toBe(before);
 });

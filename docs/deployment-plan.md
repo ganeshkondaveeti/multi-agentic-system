@@ -576,7 +576,7 @@ Everything Render needs is committed and tested before anything is created in th
 
 ## Phase 12 — Production verification and operations
 
-**Build: the production smoke checklist** (run after every release; the Playwright suite can also target the production URL with an `E2E_BASE_URL` and the access code):
+**Build: the production smoke checklist** (run after every release). `make e2e-prod`, with `E2E_ACCESS_CODE` set in the shell, runs the Playwright suite against the Render URLs and covers all seven items. It makes live model calls (about 20 turns) and approves a few redacted records.
 
 1. Clean hit: `escalate`, large-cap citation, `Last checked 25-Jun-2026`, three agent bars overlapping in the live timeline.
 2. Corpus miss: `handoff`, no URL, the searched grid filled.
