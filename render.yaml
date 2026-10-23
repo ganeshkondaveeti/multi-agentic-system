@@ -24,6 +24,7 @@ services:
         - .python-version
         - src/**
         - data/**
+        - mcp-server/**
     envVars:
       - key: GROQ_API_KEY
         sync: false
@@ -47,6 +48,19 @@ services:
         value: CF-Connecting-IP
       - key: LOG_LEVEL
         value: INFO
+      # Approval-gated MCP: after approve, append the record to a Google Doc and create a
+      # Gmail draft (no recipient, never sent). Off until REPLY_DESK_MCP is "on".
+      - key: REPLY_DESK_MCP
+        sync: false
+      - key: REPLY_DESK_DOC_ID
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      # The JSON that `npm run auth` saves in mcp-server/data/google-token.json.
+      - key: GOOGLE_TOKEN_JSON
+        sync: false
 
   # The Vite build of web/, served from Render's CDN.
   - type: web

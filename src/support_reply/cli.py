@@ -20,6 +20,7 @@ With `--offline` every node is passed `CUES_ONLY` and uses its cue table; the ke
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import sys
 from collections.abc import Callable, Sequence
@@ -32,6 +33,7 @@ from support_reply.graph import handle_complaint
 from support_reply.llm import CUES_ONLY, Classifier
 from support_reply.session import MAX_REFINEMENTS, RefinementRefused, refine
 from support_reply.trace import AGENT_NODES, Trace
+from support_reply.workspace import Step, deliver
 
 Emit = Callable[[str], None]
 Read = Callable[[str], str]
@@ -123,6 +125,11 @@ def run_session(
                 f"Approved. Record appended to {approval.records_path}; "
                 f"email draft saved to {approval.email_path}. Nothing was sent."
             )
+            # The gate just appended this session's record as the last line.
+            record = json.loads(approval.records_path.read_text(encoding="utf-8").splitlines()[-1])
+            delivery = deliver(record, approval.email_path.read_text(encoding="utf-8"))
+            if delivery.doc.status != "off":
+                emit(f"Google Doc: {_step_text(delivery.doc)}. Gmail draft: {_step_text(delivery.email)}.")
             return 0
         elif command == "/message":
             if not text:
@@ -241,6 +248,12 @@ def _prompt(session: Session) -> str:
         options.append("/approve")
     options += ["/message", "/help", "/quit"]
     return " | ".join(options)
+
+
+def _step_text(step: Step) -> str:
+    if step.status == "done":
+        return "done"
+    return f"failed ({step.error})"
 
 
 def _read(read: Read, prompt: str) -> str | None:

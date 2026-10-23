@@ -15,6 +15,7 @@ from __future__ import annotations
 import hmac
 import json
 import logging
+import os
 import uuid
 from collections.abc import Callable
 from typing import Any
@@ -25,7 +26,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-from support_reply import __version__
+from support_reply import __version__, workspace
 from support_reply.contracts import FULL_WINDOW, Disposition, Priority
 from support_reply.corpus import load as load_corpus
 from support_reply.llm import default_classifier, default_review_classifier, models_mode
@@ -93,7 +94,7 @@ def create_app(settings: Settings | None = None, *, models: ModelsFactory | None
     app = FastAPI(
         title="Reply Desk API",
         version=__version__,
-        description="Multi-agent support reply drafts. Approve writes a draft; nothing is sent.",
+        description="Multi-agent support reply drafts. Approve writes a draft, and over MCP appends to a Google Doc and creates a Gmail draft; nothing is sent.",
     )
     app.state.settings = settings
     app.state.desk = desk
@@ -144,6 +145,7 @@ def create_app(settings: Settings | None = None, *, models: ModelsFactory | None
             "corpus": {"last_checked": corpus.schemes[0].nav_date, "schemes": len(corpus.schemes)},
             "review_window": FULL_WINDOW.to_dict(),
             "access_code_required": settings.access_code is not None,
+            "mcp": {"enabled": workspace.enabled(), "doc_configured": bool(os.environ.get(workspace.DOC_ID_ENV, "").strip())},
         }
 
     protected = APIRouter(dependencies=[Depends(require_access_code)], responses=_ERRORS)

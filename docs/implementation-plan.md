@@ -12,7 +12,7 @@ The system drafts a support reply. It does not send email, fetch Groww pages, ad
 - **Model inside the reviewer.** One Gemini call per review round (`GEMINI_API_KEY`, optional `GEMINI_MODEL`, default `gemini-3.5-flash`) scans the outgoing draft for `advice` and `performance` and quotes the offending span. A finding counts only when that span is in the reply, and never for a figure Facts copied from the cited text block. The citation, PII, and shape checks are code only, and the code cues for advice and performance always run beside the model, so the reviewer fails closed with no key and no network. The rewrite is template code, not a model.
 - **One caller.** The graph is the only thing that starts Facts, Pattern, Compliance, and the reviewer. Ingress is a node it runs first. Agent nodes receive `redacted_text` (and, for Compliance, `pii_types`). They never receive another node's result.
 - **Parallel means started together.** The orchestrator submits all three agent calls, then waits. A trace records `start` timestamps before any `return` timestamp, and records the reviewer call only after all three results exist.
-- **Approval gate is local.** Milestone 2's MCP server is not in this repo. The gate is a function with the same effect: on human approve, append one redacted record and write an email draft file. It does not send.
+- **Approval gate is local first, then MCP.** The gate is a function: on human approve, append one redacted record and write an email draft file. It does not send. Milestone 2's MCP server now lives in `mcp-server/`, without its send tool: after the gate writes, and with `REPLY_DESK_MCP=on`, `support_reply.workspace` appends the record to a Google Doc and creates a Gmail draft through it.
 
 ## Layout
 

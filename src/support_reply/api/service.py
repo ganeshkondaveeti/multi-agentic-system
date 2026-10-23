@@ -31,6 +31,7 @@ from support_reply.graph import Turn, complaint_turn
 from support_reply.llm import CUES_ONLY, Classifier, models_mode
 from support_reply.session import MAX_REFINEMENTS, RefinementRefused, refine_turn
 from support_reply.trace import AGENT_NODES, Trace
+from support_reply.workspace import deliver
 
 from .limits import RunsBusy, RunSlots
 from .store import Entry, SessionBusy, SessionNotFound, SessionStore, StoreFull
@@ -148,11 +149,20 @@ class Desk:
             record = find_record(approval.records_path, session_id)
             if record is None:
                 raise ApiError(500, "record_missing", "The record was written but could not be read back.")
+            # The approval stands from here on; the Doc append and Gmail draft report
+            # their own outcome.
+            delivery = deliver(record, approval.email_path.read_text(encoding="utf-8")).to_dict()
             entry.approved = {
                 "approved_at": record["approved_at"],
                 "email_file": approval.email_path.name,
+                "delivery": delivery,
             }
-            return {"session_id": session_id, "email_file": approval.email_path.name, "record": record}
+            return {
+                "session_id": session_id,
+                "email_file": approval.email_path.name,
+                "record": record,
+                "delivery": delivery,
+            }
 
     # --- reads ------------------------------------------------------------------------
 

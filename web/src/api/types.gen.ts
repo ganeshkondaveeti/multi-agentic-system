@@ -269,6 +269,7 @@ export interface components {
             /** Email File */
             email_file: string;
             record: components["schemas"]["RecordOut"];
+            delivery: components["schemas"]["DeliveryOut"];
         };
         /** ApprovedOut */
         ApprovedOut: {
@@ -276,6 +277,7 @@ export interface components {
             approved_at: string;
             /** Email File */
             email_file: string;
+            delivery: components["schemas"]["DeliveryOut"];
         };
         /** BlockedCapOut */
         BlockedCapOut: {
@@ -374,6 +376,14 @@ export interface components {
             /** Schemes */
             schemes: number;
         };
+        /**
+         * DeliveryOut
+         * @description After approve: the Google Doc append and the Gmail draft, over MCP.
+         */
+        DeliveryOut: {
+            doc: components["schemas"]["StepOut"];
+            email: components["schemas"]["StepOut"];
+        };
         /** DraftOut */
         DraftOut: {
             /** Reply */
@@ -454,6 +464,14 @@ export interface components {
             review_window: components["schemas"]["WindowOut"];
             /** Access Code Required */
             access_code_required: boolean;
+            mcp: components["schemas"]["McpOut"];
+        };
+        /** McpOut */
+        McpOut: {
+            /** Enabled */
+            enabled: boolean;
+            /** Doc Configured */
+            doc_configured: boolean;
         };
         /** MessageIn */
         MessageIn: {
@@ -676,6 +694,16 @@ export interface components {
             created_at: string;
             /** Updated At */
             updated_at: string;
+        };
+        /** StepOut */
+        StepOut: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "done" | "failed" | "off";
+            /** Error */
+            error: string | null;
         };
         /** TraceEventOut */
         TraceEventOut: {

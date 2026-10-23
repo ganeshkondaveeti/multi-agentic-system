@@ -42,7 +42,7 @@ uv run python scripts/verify_flow.py            # one complaint against the live
 
 Drop `--offline` to use the models configured in `.env`.
 
-In the CLI, plain text is a pushback that re-runs only the agents it names. `/message`, `/replace`, `/approve`, `/show`, `/quit`, and `/help` are listed by `/help`. `/approve` is offered only when the reviewer passed. It appends a redacted record to `out/records.jsonl` and writes `out/email_drafts/<session>.txt`.
+In the CLI, plain text is a pushback that re-runs only the agents it names. `/message`, `/replace`, `/approve`, `/show`, `/quit`, and `/help` are listed by `/help`. `/approve` is offered only when the reviewer passed. It appends a redacted record to `out/records.jsonl` and writes `out/email_drafts/<session>.txt`; with `REPLY_DESK_MCP=on` it then appends the record to the Google Doc and creates the Gmail draft (see below).
 
 ### HTTP API
 
@@ -62,6 +62,10 @@ Routes live under `/api`: `health`, `sessions` (create, list, get), `sessions/{i
 | `REPLY_DESK_ENV`, `LOG_LEVEL` | Environment label shown by `/api/health` (default `local`), log level (default `INFO`) |
 
 Sessions live in memory for 2 idle hours; approved records persist in `REPLY_DESK_OUT_DIR`. Approving closes a session.
+
+### Approval-gated MCP (`mcp-server/`)
+
+After a human approve, and only with `REPLY_DESK_MCP=on`, the API starts Reply Desk's MCP server as a stdio subprocess. It appends the redacted record as one line to the Google Doc in `REPLY_DESK_DOC_ID` and creates a Gmail draft of the reply with no recipient. The server has no send tool, so nothing is ever sent. The local record and email file are written first, and a failed Google call never undoes the approval: the approve response and the approved note report each step as done or failed, with the server's error code. `mcp-server/README.md` covers the one-time Google OAuth setup.
 
 ### Web app (`web/`)
 
@@ -111,6 +115,7 @@ data/                read-only corpus: five parsed scheme pages, 1,650 reviews, 
 tests/               pytest suite
 docs/                problem statement, architecture, implementation plan, deployment plan
 web/                 React frontend (Vite, Tailwind, Vitest, Playwright)
+mcp-server/          MCP server for the approve step: Google Doc append, Gmail draft, no send (TypeScript)
 design/stitch/       Stitch UI designs for the web frontend (reference only, not built)
 scripts/             live-model verification, web fixture capture, the local stack check
 Dockerfile           the API image Render builds
@@ -120,4 +125,4 @@ Makefile             local full-stack targets
 
 ## Status
 
-The package is complete against `docs/implementation-plan.md`. The web app runs locally as a full stack, and CI runs on GitHub (Phases 0–8 of `docs/deployment-plan.md`). The repo is ready for Render (Phase 9); the Render deploy comes next (Phases 10–12).
+The package is complete against `docs/implementation-plan.md`. The web app runs locally as a full stack, and CI runs on GitHub (Phases 0–8 of `docs/deployment-plan.md`). Both services are deployed on Render; the production checks are Phases 10–12. Approve also appends to a Google Doc and creates a Gmail draft over MCP once `REPLY_DESK_MCP=on` and the Google settings are in place.

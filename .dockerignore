@@ -4,6 +4,12 @@
 .env.*
 out/
 web/
+mcp-server/node_modules/
+mcp-server/dist/
+mcp-server/data/
+mcp-server/tests/
+mcp-server/.env
+credential*.json
 design/
 tests/
 docs/

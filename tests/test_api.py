@@ -49,6 +49,7 @@ def test_health_reports_models_corpus_and_window(api):
         "corpus": {"last_checked": "25-Jun-2026", "schemes": 5},
         "review_window": {"start": "2026-04-12", "end": "2026-07-04"},
         "access_code_required": False,
+        "mcp": {"enabled": False, "doc_configured": False},
     }
 
 
