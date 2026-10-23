@@ -4,8 +4,11 @@ API_PORT ?= 8000
 IMAGE ?= reply-desk-api
 # Origins the Docker API accepts: `make preview-direct` (4173) and `make dev-web` (5173).
 DOCKER_ORIGINS ?= http://localhost:4173,http://127.0.0.1:4173,http://localhost:5173,http://127.0.0.1:5173
+# The Render deploy that `make e2e-prod` drives.
+PROD_WEB ?= https://reply-desk-web.onrender.com
+PROD_API ?= https://reply-desk-api.onrender.com
 
-.PHONY: help install dev dev-api dev-web test e2e stack-check docker-build docker-run preview-direct
+.PHONY: help install dev dev-api dev-web test e2e e2e-prod stack-check docker-build docker-run preview-direct
 
 help:
 	@echo "install         uv sync and npm ci"
@@ -14,6 +17,7 @@ help:
 	@echo "dev-web         web only (proxies /api to :$(API_PORT))"
 	@echo "test            pytest and Vitest"
 	@echo "e2e             Playwright against its own API (models off) and a preview build"
+	@echo "e2e-prod        Playwright against the Render deploy (live models; needs E2E_ACCESS_CODE)"
 	@echo "stack-check     Playwright against the production server command, cross-origin, then a PII grep"
 	@echo "docker-run      build and run the production image on :$(API_PORT)"
 	@echo "preview-direct  build the web app to call the API on :$(API_PORT) directly, and preview it on :4173"
@@ -39,6 +43,12 @@ test:
 # the web app, and stops both when the run ends.
 e2e:
 	cd web && npm run e2e
+
+# The same suite against the deployed site. It makes live model calls and approves
+# real (redacted) records. E2E_ACCESS_CODE comes from the shell, never from a file here.
+e2e-prod:
+	@test -n "$$E2E_ACCESS_CODE" || { echo "Set E2E_ACCESS_CODE to the API's ACCESS_CODE"; exit 1; }
+	cd web && E2E_BASE_URL=$(PROD_WEB) E2E_API_URL=$(PROD_API) npm run e2e
 
 stack-check:
 	scripts/stack_check.sh
