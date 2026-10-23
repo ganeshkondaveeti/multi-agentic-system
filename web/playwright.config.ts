@@ -5,7 +5,8 @@ import { defineConfig, devices } from "@playwright/test";
 // End-to-end runs against the real FastAPI service with models off, so it needs no
 // network and burns no quota. The web app is built and served by `vite preview`,
 // which proxies /api to that service. Set E2E_BASE_URL to test a deployed frontend
-// instead; then no local servers start.
+// instead; then no local servers start. The spec reads the deployed API's origin and
+// access code from E2E_API_URL and E2E_ACCESS_CODE.
 const API_PORT = Number(process.env.E2E_API_PORT ?? 8787);
 const WEB_PORT = Number(process.env.E2E_WEB_PORT ?? 4174);
 const OUT_DIR = path.resolve(import.meta.dirname, "test-results", "e2e-out");
@@ -17,7 +18,9 @@ export default defineConfig({
   workers: 1,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
-  timeout: 30_000,
+  // A deployed API calls live models and may be waking from a spin-down.
+  timeout: external ? 180_000 : 30_000,
+  expect: { timeout: external ? 30_000 : 5_000 },
   use: {
     baseURL: external ?? `http://127.0.0.1:${WEB_PORT}`,
     trace: "retain-on-failure",
