@@ -1,12 +1,14 @@
 # Render Blueprint: the Reply Desk API and the web frontend. See docs/deployment-plan.md.
 # `sync: false` values are entered in the Render dashboard, never committed.
 services:
-  # FastAPI from the root Dockerfile. One instance: sessions live in memory, and the
-  # disk keeps approved records across deploys. Disks need a paid plan.
+  # FastAPI from the root Dockerfile on the free plan: one instance, sessions in memory,
+  # and approved records in the container's /data/out, which is wiped on every restart,
+  # deploy and spin-down. To keep records, set `plan: starter` and add a disk at
+  # /data/out (docs/deployment-plan.md, Phase 12, "Upgrading to keep records").
   - type: web
     name: reply-desk-api
     runtime: docker
-    plan: starter
+    plan: free
     region: singapore
     dockerfilePath: ./Dockerfile
     dockerContext: .
@@ -22,10 +24,6 @@ services:
         - .python-version
         - src/**
         - data/**
-    disk:
-      name: reply-desk-out
-      mountPath: /data/out
-      sizeGB: 1
     envVars:
       - key: GROQ_API_KEY
         sync: false

@@ -25,9 +25,9 @@ COPY src/ src/
 COPY data/ data/
 RUN uv sync --frozen --no-dev
 
-# Approved records and email drafts go to /data/out, where Render mounts its disk. If the
-# mounted disk is owned by root and writes are refused, see Phase 9 step 5 of
-# docs/deployment-plan.md.
+# Approved records and email drafts go to /data/out. On Render's free plan that is the
+# container's own filesystem, wiped on every restart. On a paid plan a disk mounts here;
+# if writes are then refused, see Phase 9 step 5 of docs/deployment-plan.md.
 RUN useradd --system --uid 10001 --no-create-home app \
     && mkdir -p /data/out \
     && chown app /data/out

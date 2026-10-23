@@ -9,7 +9,7 @@ Every phase below has a testable exit and leaves the next phase able to build on
 The earlier version of this plan targeted Railway (backend) and Vercel (frontend). Railway is not working for this project, and Render can host both halves, so the plan now targets Render only.
 
 - **Built and on GitHub:** Phases 0–8 (the API, the web app, the `Dockerfile`, the `Makefile`, and CI). They do not depend on the host, apart from a few leftovers that Phase 9 cleans up.
-- **Render readiness (Phase 9):** done. `render.yaml` is committed, `web/vercel.json` is gone, the Railway and Vercel wording is replaced, and the rate limit reads `CF-Connecting-IP` on Render. Step 5 (disk permissions) is applied only if Phase 10 needs it.
+- **Render readiness (Phase 9):** done. `render.yaml` is committed, `web/vercel.json` is gone, the Railway and Vercel wording is replaced, and the rate limit reads `CF-Connecting-IP` on Render. The API runs on Render's free plan, so it has no disk (see Decisions).
 - **Still to do:** Phases 10–12.
 
 ## Decisions
@@ -17,8 +17,8 @@ The earlier version of this plan targeted Railway (backend) and Vercel (frontend
 - **One repo, one Blueprint, two Render services.** `render.yaml` at the repo root defines `reply-desk-api` (web service, Docker runtime, built from the root `Dockerfile`) and `reply-desk-web` (static site, root directory `web/`). The Python package stays at the repo root. The frontend lives in `web/`.
 - **Backend: FastAPI + uvicorn**, inside the existing package as `support_reply.api`. Endpoints are thin wrappers over `graph.handle_complaint`, `session.refine`, and `gate.approve`. No agent, reviewer, or gate logic moves into the API.
 - **Frontend: React + Vite + TypeScript + Tailwind CSS v3.** Tailwind v3 so the Stitch `tailwind.config` objects port directly. TanStack Query for server state, React Router for pages, and API types generated from the backend's OpenAPI schema with `openapi-typescript`.
-- **The API runs on a paid Starter instance with a persistent disk.** Approved records (`records.jsonl` and `email_drafts/`) live on a Render disk mounted at `/data/out`. Render's free web services cannot have a disk, and they spin down after 15 minutes idle, which would drop every open session and every record on each restart. The static site stays on the free plan.
-- **Sessions live in memory on one instance.** A session is a short complaint thread. A service with a disk cannot scale past one instance, which matches the in-memory store. A restart or deploy drops open sessions, never approved records. With a disk attached, Render stops the old instance before starting the new one, so each deploy has a short outage. That is acceptable for a demo.
+- **Both services run on Render's free plan, so approved records do not last.** A free web service has 512 MB of memory (the API uses under 100 MB), cannot have a persistent disk, and spins down after 15 minutes without traffic. Approved records (`records.jsonl` and `email_drafts/`) are written to `/data/out` inside the container and are lost on every restart, deploy, and spin-down, together with open sessions. The first request after a spin-down waits about a minute while the instance starts. A workspace gets 750 free instance hours a month, enough for one service running all month. The static site is free and never spins down. To keep records, see "Upgrading to keep records" in Phase 12.
+- **Sessions live in memory on one instance.** A session is a short complaint thread. The free plan runs one instance, which matches the in-memory store. A restart, deploy, or spin-down drops open sessions. That is acceptable for a demo.
 - **Region: Singapore** for both services. It is the Render region closest to the users of a Groww support desk.
 - **The browser calls the API directly.** CORS allows only the static site's origins. In local development, Vite proxies `/api` to `localhost:8000`, so there is no CORS locally. A static-site rewrite that proxies `/api` to the API would remove CORS, but it hides the caller's IP from the rate limiter and adds a hop in front of the SSE stream, so it is not used. Serving the web build from FastAPI would also remove CORS, but it gives up the static site's CDN and the ability to roll back the frontend and backend separately.
 - **The client IP comes from `CF-Connecting-IP` on Render.** Render's public services sit behind Cloudflare, which overwrites that header on every request. Render's own proxy appends its address to `X-Forwarded-For`, so the last hop, which the current code uses, is a proxy address and would put every user in one rate-limit bucket. The header to trust becomes a setting (Phase 9).
@@ -37,10 +37,10 @@ flowchart LR
     subgraph Static["reply-desk-web (static site, CDN)"]
       Web[web/dist<br/>React + Tailwind]
     end
-    subgraph Service["reply-desk-api (web service, 1 instance)"]
+    subgraph Service["reply-desk-api (free web service, 1 instance)"]
       API[FastAPI support_reply.api]
       Store[(In-memory sessions)]
-      Disk[(Disk /data/out<br/>records.jsonl, email_drafts/)]
+      Disk[(/data/out, wiped on restart<br/>records.jsonl, email_drafts/)]
     end
   end
   Groq[Groq: facts, pattern, compliance]
@@ -92,7 +92,7 @@ flowchart LR
 └── .github/workflows/ci.yml
 ```
 
-`web/vercel.json` is gone: the SPA rewrite and the security headers move to the static site in `render.yaml`. `out/` stays gitignored. Locally it holds records from local approvals. On Render the disk replaces it.
+`web/vercel.json` is gone: the SPA rewrite and the security headers move to the static site in `render.yaml`. `out/` stays gitignored. Locally it holds records from local approvals. On Render it is `/data/out` inside the container, which is wiped on every restart.
 
 ## Dependency order
 
@@ -147,7 +147,7 @@ The package was built for one process and one user. Four small changes make it s
 **Build**
 
 1. **Cue-only mode without editing the environment.** Today `accept --offline` and `cli --offline` pop the API keys from `os.environ`. In a server that would switch off models for every concurrent request. Add a `llm.CUES_ONLY` sentinel: `classify_or_none` returns `None` for it without logging a failure. `handle_complaint`, `refine`, and `run` pass it through like any classifier. `REPLY_DESK_MODELS=off` makes the API pass `CUES_ONLY` for both the agents and the reviewer.
-2. **Configurable output directory.** `gate.default_out_dir()` reads `REPLY_DESK_OUT_DIR` first, then falls back to the repo `out/`. Render sets it to the disk's mount path.
+2. **Configurable output directory.** `gate.default_out_dir()` reads `REPLY_DESK_OUT_DIR` first, then falls back to the repo `out/`. Render sets it to `/data/out`.
 3. **Provenance per node.** Each agent subgraph's classify step records whether its pick came from the model or the cues. The parent graph collects this in a `provenance` channel (`{"facts": "model" | "cues", ...}`, plus `reviewer`), returned by `graph.run` beside the session. This is not added to the contracts, so `Session.to_dict()` is unchanged. The UI shows a small `model` or `cues` tag on each agent card, so a quota fallback is visible.
 4. **Acceptance as data.** `accept.run_all` gains a structured report (`report() -> dict`): the 20 review ids with outcomes, four branches with traces and `agents_fired`, the advice turns, and both cap checks. The text output is built from that dict. The report writes approvals into a temporary directory, never into the real records.
 
@@ -418,7 +418,7 @@ Everything Render needs is committed and tested before anything is created in th
      - type: web
        name: reply-desk-api
        runtime: docker
-       plan: starter
+       plan: free
        region: singapore
        dockerfilePath: ./Dockerfile
        dockerContext: .
@@ -433,10 +433,6 @@ Everything Render needs is committed and tested before anything is created in th
            - .python-version
            - src/**
            - data/**
-       disk:
-         name: reply-desk-out
-         mountPath: /data/out
-         sizeGB: 1
        envVars:
          - key: GROQ_API_KEY
            sync: false
@@ -510,7 +506,7 @@ Everything Render needs is committed and tested before anything is created in th
    - `.env.example`: comments for `ACCESS_CODE` and `ALLOWED_ORIGIN_REGEX` refer to Render. Add `REPLY_DESK_CLIENT_IP_HEADER`, blank, with a one-line comment.
    - `web/.env.example`: `VITE_API_BASE_URL` comment names the Render API URL.
    - `README.md`: the deploy section describes `render.yaml`, and the status line points at this plan's Phases 10–12.
-5. **Disk permissions.** The image runs as the non-root user `app` (uid 10001) and owns `/data/out` at build time. A Render disk mounted over that path may be owned by root. Keep the non-root user. If Phase 10 shows that approve cannot write, add a small entrypoint that runs as root, `chown`s `/data/out` to `app`, and then starts uvicorn as `app` with `setpriv`, which is already in the slim image. Do not drop the `USER` line instead.
+5. **Disk permissions (only after upgrading to a disk).** The image runs as the non-root user `app` (uid 10001) and owns `/data/out` at build time. A Render disk mounted over that path may be owned by root. Keep the non-root user. If approve cannot write once a disk is added, add a small entrypoint that runs as root, `chown`s `/data/out` to `app`, and then starts uvicorn as `app` with `setpriv`, which is already in the slim image. Do not drop the `USER` line instead.
 
 **Exit**
 
@@ -539,7 +535,7 @@ Everything Render needs is committed and tested before anything is created in th
   | `VITE_API_BASE_URL` (static site) | `https://reply-desk-api.onrender.com`, or leave blank until the API URL is known |
 
   `GROQ_MODEL` and `GEMINI_MODEL` are optional; the defaults are in `llm.py`. Render sets `PORT`, and the `Dockerfile` reads it.
-- Apply the Blueprint. The API builds the `Dockerfile`, mounts the disk at `/data/out`, and goes live once `/api/health` answers.
+- Apply the Blueprint. The API builds the `Dockerfile` on the free plan and goes live once `/api/health` answers.
 - Note the API's public URL from its dashboard page. If it is not `https://reply-desk-api.onrender.com`, update the CSP `connect-src` in `render.yaml` in a pull request.
 - Copy the generated `ACCESS_CODE` from the API's Environment page.
 
@@ -549,7 +545,8 @@ Everything Render needs is committed and tested before anything is created in th
 - With the access code, a `POST /api/sessions` clean hit returns `escalate` with the large-cap citation, and `provenance` shows `model` for all four nodes.
 - A streamed `POST /api/sessions` with `Accept: text/event-stream` (`curl -N`) prints `trace` events one by one, not all at the end.
 - `POST /api/acceptance/run` returns PASS.
-- Approve one session. It is listed by `GET /api/records`. Trigger a manual deploy, and the record is still listed, because it lives on the disk. If approve fails with a permission error, apply the entrypoint fix from Phase 9 step 5 and repeat.
+- Approve one session. It is listed by `GET /api/records`. After a manual deploy the list is empty again; on the free plan that is expected.
+- After 15 minutes with no requests, the next `/api/health` takes up to a minute, then answers.
 - The Render logs for a PII complaint show `[PAN]`, never the raw value.
 - Rate limit by caller: 12 turns from one network, then the 13th gets 429, while a second network (a phone hotspot) still gets answers. If both networks are limited together, the client IP header is not being read.
 
@@ -562,7 +559,7 @@ Everything Render needs is committed and tested before anything is created in th
 - The static site was created with the Blueprint in Phase 10. If `VITE_API_BASE_URL` was left blank, set it now to the API's URL. Vite inlines it at build time, so changing it needs a new deploy of the static site (Render offers this when you save the variable).
 - Note the static site's URL (`https://reply-desk-web.onrender.com` or with a suffix).
 - On the API, set `ALLOWED_ORIGINS` to that URL, plus any custom domain, comma-separated with no trailing slash. Saving the variable redeploys the API.
-- **Pull request previews (optional).** Turn on previews for the static site only, not the API: an API preview would be a second paid instance with no disk. Previews build with the production `VITE_API_BASE_URL`, so they call the production API and still need the access code. Open a test pull request, read the preview's URL, and set `ALLOWED_ORIGIN_REGEX` on the API to match only this site's previews, for example `^https://reply-desk-web-pr-\d+\.onrender\.com$`. Leave it blank if previews stay off.
+- **Pull request previews (optional).** Turn on previews for the static site only, not the API: an API preview would be a second instance drawing on the same 750 free hours. Previews build with the production `VITE_API_BASE_URL`, so they call the production API and still need the access code. Open a test pull request, read the preview's URL, and set `ALLOWED_ORIGIN_REGEX` on the API to match only this site's previews, for example `^https://reply-desk-web-pr-\d+\.onrender\.com$`. Leave it blank if previews stay off.
 - **Custom domain (optional).** Add it to the static site in Render, point DNS as Render shows, and add the domain to `ALLOWED_ORIGINS`.
 
 **Exit**
@@ -588,18 +585,32 @@ Everything Render needs is committed and tested before anything is created in th
 
 **Operations**
 
-- **Deploys:** merge to `main`, CI goes green, then Render deploys whichever service the change touched. An API deploy has a short outage and drops open sessions, because the disk-backed instance is stopped before the new one starts. Deploy the API outside demo hours.
+- **Deploys:** merge to `main`, CI goes green, then Render deploys whichever service the change touched. An API deploy drops open sessions and approved records. Deploy the API outside demo hours.
 - **Rollback:** each service's Events page lists past deploys, and **Rollback** redeploys an earlier one. The two services are independent, so roll back only the side that broke. After a rollback, check that the service's auto-deploy setting is still what you want, so the next merge does not undo or skip the fix.
 - **Keys:** rotate the Groq and Gemini keys and the access code by changing the API's environment variables. Saving redeploys the API. Nothing in the frontend changes except users entering the new code.
 - **Quota:** watch the per-agent `provenance`. A run of `cues` in production means the Groq free tier is exhausted. Raise the plan or lower `REPLY_DESK_RATE_PER_MINUTE`.
-- **Records:** `records.jsonl` grows by one line per approve and contains redacted text only. Render snapshots paid disks daily, and a snapshot can be restored from the disk's settings. For a copy you keep, open the API's Shell in the dashboard and print or copy the file out.
-- **Cost:** the API is the only paid part (Starter instance plus a 1 GB disk). The static site is free. To pause the demo, suspend the API service: the disk and its records are kept.
+- **Records:** on the free plan, `records.jsonl` and the email drafts last only until the next restart, deploy, or spin-down. They contain redacted text only. To keep a copy, use Export CSV on the Records page before then.
+- **Cold starts:** the first visitor after 15 idle minutes waits about a minute. Open the site a minute before a demo.
+- **Free hours:** if the workspace's 750 instance hours run out, Render suspends the API until the next month.
+
+**Upgrading to keep records**
+
+In `render.yaml`, set the API's `plan: starter` and add a disk under it:
+
+```yaml
+    disk:
+      name: reply-desk-out
+      mountPath: /data/out
+      sizeGB: 1
+```
+
+Records then survive restarts and deploys, the service never spins down, and Render snapshots the disk daily. A service with a disk stops the old instance before starting the new one, so each API deploy has a short outage. If approve then fails with a permission error, apply Phase 9 step 5.
 
 **Exit**
 
 - The smoke checklist passes on the production URLs.
 - One rollback has been rehearsed on each service.
-- One disk snapshot is visible in the API's disk settings.
+- A cold start has been timed, so you know how early to open the site before a demo.
 
 ---
 
@@ -607,9 +618,9 @@ Everything Render needs is committed and tested before anything is created in th
 
 - **User accounts and roles.** The access code is a shared gate, not authentication. An operator name on records needs real auth first.
 - **Sending email, or any client that could send it.** Approve writes a draft file, as in Milestone 2.
-- **More than one backend instance, or zero-downtime API deploys.** Both need the session store moved off the instance (Render Key Value, or Postgres) and the records off the disk.
-- **A database for records.** `records.jsonl` on a disk is enough for a demo, and it keeps the gate's single append path.
-- **Render's free web service tier for the API.** It has no disk and spins down when idle, so records and sessions would not survive.
+- **More than one backend instance, or zero-downtime API deploys.** Both need the session store moved off the instance (Render Key Value, or Postgres) and the records off the instance.
+- **A database for records.** `records.jsonl` is enough for a demo, and it keeps the gate's single append path.
+- **Keeping records on the free plan.** That needs a disk (paid) or an external store. The upgrade path is in Phase 12.
 - **Full-stack preview environments.** Only the static site gets pull request previews, and they use the production API.
 - **Stitch screens shipped as-is**, or any of the invented metrics, compliance labels, or fake data they contained.
 - **Live-model acceptance in CI.** CI stays on the cue tables, so it needs no secrets and burns no quota. Live checks are the Phase 12 smoke list.
@@ -628,6 +639,6 @@ Everything Render needs is committed and tested before anything is created in th
 | 7 | Makefile, Dockerfile, full local run, PII audit | 6 | Built |
 | 8 | GitHub repo, CI, branch protection | 7 | Built |
 | 9 | Client IP header, `render.yaml`, remove Vercel and Railway leftovers | 8 | Built |
-| 10 | Render Blueprint, API service, disk, variables | 9 | To do |
+| 10 | Render Blueprint, free API service, variables | 9 | To do |
 | 11 | Static site, API URL, CORS handshake, previews | 10 | To do |
-| 12 | Production smoke, rollback rehearsal, snapshots | 11 | To do |
+| 12 | Production smoke, rollback rehearsal, cold-start check | 11 | To do |

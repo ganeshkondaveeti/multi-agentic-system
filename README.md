@@ -101,7 +101,7 @@ Env files: the root `.env` holds the keys and the serving variables above. `web/
 
 ## Deploying on Render
 
-`render.yaml` is a Render Blueprint with two services: `reply-desk-api`, a web service built from the `Dockerfile` with a disk at `/data/out` for approved records, and `reply-desk-web`, a static site built from `web/`. The static site rewrites every path to `index.html` and sets the security headers. Its CSP `connect-src` names `https://reply-desk-api.onrender.com`; change it if Render gives the API a different URL. Both services deploy from `main` after CI passes. The steps are Phases 10–12 of `docs/deployment-plan.md`.
+`render.yaml` is a Render Blueprint with two services: `reply-desk-api`, a free-plan web service built from the `Dockerfile` (approved records in `/data/out` are lost whenever it restarts, redeploys, or spins down after 15 idle minutes), and `reply-desk-web`, a static site built from `web/`. The static site rewrites every path to `index.html` and sets the security headers. Its CSP `connect-src` names `https://reply-desk-api.onrender.com`; change it if Render gives the API a different URL. Both services deploy from `main` after CI passes. The steps are Phases 10–12 of `docs/deployment-plan.md`.
 
 ## Layout
 
