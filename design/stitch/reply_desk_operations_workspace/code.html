@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"primary-fixed":"#62fae3","surface-container-low":"#101d2a","on-tertiary":"#41008b","error-container":"#93000a","inverse-primary":"#006b5f","inverse-surface":"#d6e4f6","surface-dim":"#071421","on-secondary-fixed-variant":"#004882","tertiary-fixed-dim":"#d5bbff","error":"#ffb4ab","tertiary":"#e5d2ff","primary":"#57f1db","surface-tint":"#3cddc7","on-secondary-fixed":"#001c38","surface-variant":"#293644","on-tertiary-fixed":"#270058","secondary-container":"#0071c7","tertiary-fixed":"#ecdcff","on-tertiary-container":"#612ab1","surface-container-highest":"#293644","on-error":"#690005","on-background":"#d6e4f6","outline":"#859490","secondary-fixed":"#d3e4ff","background":"#071421","surface-container":"#14212e","inverse-on-surface":"#25313f","surface-container-lowest":"#030f1c","on-primary-container":"#00574d","surface-container-high":"#1e2b39","secondary":"#a2c9ff","on-primary-fixed":"#00201c","surface-bright":"#2e3a49","on-secondary":"#00315c","primary-fixed-dim":"#3cddc7","on-secondary-container":"#f0f4ff","primary-container":"#2dd4bf","on-surface-variant":"#bacac5","on-primary-fixed-variant":"#005047","on-surface":"#d6e4f6","on-error-container":"#ffdad6","secondary-fixed-dim":"#a2c9ff","surface":"#071421","tertiary-container":"#ceb0ff","on-primary":"#003731","outline-variant":"#3c4a46","on-tertiary-fixed-variant":"#5a21ab"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin":"1rem","gutter":"0.75rem","space-xl":"1.5rem","margin-panel":"0.75rem","space-sm":"0.5rem","gutter-dense":"0.5rem","space-xs":"0.25rem","space-lg":"1rem","space-md":"0.75rem"},"fontFamily":{"headline-sm":["Inter"],"headline-md":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"],"body-sm":["Inter"],"code-inline":["JetBrains Mono"],"label-mono":["JetBrains Mono"],"body-xs":["Inter"],"trace-mono":["JetBrains Mono"]},"fontSize":{"headline-sm":["14px",{"lineHeight":"20px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.015em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"code-inline":["12px",{"lineHeight":"16px","fontWeight":"500"}],"label-mono":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"body-xs":["12px",{"lineHeight":"16px","fontWeight":"400"}],"trace-mono":["11px",{"lineHeight":"14px","fontWeight":"400"}]}}}};</script></head><body class="bg-background font-body-sm text-on-surface antialiased selection:bg-primary selection:text-on-primary"><header class="fixed top-0 left-0 w-full z-50 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="h-14 w-full px-space-lg flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><img alt="Reply Desk Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VgkDKG2VsYUzj_v8jZjaB-jPaieLxkJJrb_wNGNnePTcw4tZEevN04Ob2iJu84l1my8LFxi7f6iMhNhI3gkQobCVIIqa8XnhhiYrpyJRIMvRwsICHNFs5uO15YBHjnUJump3ExOaKpJNV0IXKF5jos0aZWPOZbDIS8RIqbRLbUW-tjXMDCi5htAY4w71me7JGovEF97JUxI_yPo4x7HpWDg0gslZWxhYchWdmURO8HWrcyg8LlalzIKC2F"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface uppercase">Reply Desk</span><span class="font-trace-mono text-trace-mono uppercase tracking-wider px-space-xs py-0.5 rounded bg-surface-container-highest text-primary font-medium">PROD / SEBI COMPLIANT ENCLAVE</span></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm"><a aria-current="page" class="px-space-md py-1.5 rounded transition-colors bg-primary-container text-on-primary-container font-headline-sm" data-path="queue" href="#">Queue (14)</a><a class="px-space-md py-1.5 rounded font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="compliance-audit" href="#">Compliance Audit</a><a class="px-space-md py-1.5 rounded font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="agent-metrics" href="#">Agent Metrics</a><a class="px-space-md py-1.5 rounded font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="policy-rules" href="#">Policy Rules</a></nav></div><div class="hidden xl:flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-lowest font-trace-mono text-trace-mono text-on-surface-variant"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span><span>Orchestrator v2.4 (Active) • SEBI Rulepack 2026.3</span></div><div class="flex items-center gap-space-md"><div class="flex items-center justify-between gap-space-md px-space-sm py-1 rounded bg-surface-container-lowest text-on-surface-variant font-code-inline text-code-inline min-w-[200px]"><span>Search ticket...</span><kbd class="px-1.5 py-0.5 text-[10px] rounded bg-surface-container-high text-on-surface">⌘K</kbd></div><div class="font-label-mono text-label-mono text-on-surface-variant flex items-center gap-1"><span class="text-primary">⚡</span><span>342ms p95</span></div><div class="flex items-center gap-space-sm"><div class="text-right hidden sm:block"><div class="font-headline-sm text-headline-sm text-on-surface leading-tight">A. Sharma</div><div class="font-trace-mono text-trace-mono text-on-surface-variant">L2 Compliance Specialist</div></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxWwQjjzG4tzdk9jn641o2noNZyT1TN1XMOyi2lUQbUPRAMmck4_j5vPXtFF7TqejSvw_ZMvzOJ_fChxc8YxGnELsYswgWjNGKoLf5trYXeHkeTV2BbTbbWXBVx5qt8s7z5uiG2z1bC5fl2GdhaVmIeUivtsCRE_zifd4m3eIjDLSlHGwjCk3njNfYKTuYqM8dn6GukxEB-EkPhJ9iVX7pzbR2csnRTH3thpH32zZ45YE-ea45UisPQw"/></div></div></div></header><main class="w-full pt-14 bg-background min-h-screen"><div class="flex flex-col w-full text-on-surface select-none pb-12">
+<!-- Operational Context Header Bar -->
+<div class="w-full bg-[#101d2a] px-4 py-2 border-b border-[#243042] flex items-center justify-between font-label-mono text-label-mono text-on-surface-variant">
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1.5 text-primary font-medium">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+        STREAM ACTIVE
+      </span>
+<span class="text-[#243042]">|</span>
+<span>INSPECTION BENCH: SEBI-AMFI GATEWAY-04</span>
+<span class="text-[#243042]">|</span>
+<span class="text-on-surface">SESSION AUDIT: <span class="text-primary font-code-inline">0x88F92A</span></span>
+</div>
+<div class="flex items-center gap-4 text-trace-mono">
+<span>KMS ENCRYPTION: AES-256-GCM</span>
+<span class="px-1.5 py-0.5 rounded bg-[#18202B] text-primary border border-[#243042]">ZERO DATA RETENTION</span>
+<span class="text-on-surface">UPTIME 99.994%</span>
+</div>
+</div>
+<!-- Main 3-Column Operational Workbench -->
+<div class="w-full max-w-[1440px] mx-auto grid grid-cols-12 gap-0 min-h-[calc(100vh-84px)] items-start">
+<!-- LEFT COLUMN: Ticket Queue (~280px equivalent: 3 of 12 cols, fixed feel) -->
+<aside class="col-span-12 lg:col-span-3 xl:col-span-3 bg-[#121821] border-r border-[#243042] min-h-full flex flex-col">
+<!-- Queue Header -->
+<div class="p-3 border-b border-[#243042]">
+<div class="flex items-center justify-between mb-2.5">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface">Incoming Complaints</span>
+<span class="px-1.5 py-0.2 rounded-full bg-[#18202B] text-primary font-code-inline text-trace-mono font-semibold border border-[#243042]">14</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-on-surface">tune</span>
+</div>
+<!-- Filter Tabs -->
+<div class="flex items-center gap-1 overflow-x-auto pb-1 text-trace-mono font-code-inline">
+<button class="px-2 py-1 rounded bg-primary-container text-on-primary-container font-semibold">All</button>
+<button class="px-2 py-1 rounded bg-[#18202B] text-on-surface-variant hover:text-on-surface border border-[#243042]">P1 Urgent</button>
+<button class="px-2 py-1 rounded bg-[#18202B] text-on-surface-variant hover:text-on-surface border border-[#243042]">Mutual Funds</button>
+<button class="px-2 py-1 rounded bg-[#18202B] text-on-surface-variant hover:text-on-surface border border-[#243042]">Unassigned</button>
+</div>
+<!-- Quick Search Filter -->
+<div class="mt-2.5 relative">
+<input class="w-full h-8 pl-8 pr-2 rounded bg-[#0B0F14] border border-[#243042] text-body-xs font-code-inline text-on-surface placeholder:text-outline focus:outline-none focus:border-primary transition-colors" placeholder="Filter by PAN, ID, token..." type="text"/>
+<span class="material-symbols-outlined absolute left-2 top-2 text-[16px] text-outline">search</span>
+</div>
+</div>
+<!-- Ticket List Rows -->
+<div class="flex flex-col divide-y divide-[#243042] overflow-y-auto">
+<!-- Row 1 (ACTIVE SELECTED) -->
+<div class="bg-[#18202B] border-l-2 border-[#2DD4BF] p-3 cursor-pointer transition-colors relative">
+<div class="flex items-center justify-between text-trace-mono mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-code-inline font-semibold text-primary">CMP-84920</span>
+<span class="text-outline">•</span>
+<span class="text-on-surface-variant">4m ago</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-[#D29922]/20 text-[#D29922] border border-[#D29922]/40">P2</span>
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-primary/10 text-primary border border-primary/30">Reply</span>
+</div>
+</div>
+<p class="font-body-xs text-body-xs text-on-surface line-clamp-2 mb-2 leading-relaxed">
+            Charged 1% exit load on HDFC Large Cap redemption despite holding for 368 days...
+          </p>
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-[#101d2a] font-trace-mono text-[10px] text-secondary border border-[#243042]">Retail (HNI)</span>
+<span class="px-1.5 py-0.5 rounded bg-error-container/30 font-trace-mono text-[10px] text-error border border-error/30">SEBI SCORES Escalated</span>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="p-3 hover:bg-[#18202B]/60 cursor-pointer transition-colors border-l-2 border-transparent">
+<div class="flex items-center justify-between text-trace-mono mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-code-inline font-semibold text-on-surface">CMP-84918</span>
+<span class="text-outline">•</span>
+<span class="text-on-surface-variant">12m ago</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-[#F85149]/20 text-[#F85149] border border-[#F85149]/40">P1</span>
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-[#F85149]/10 text-[#F85149] border border-[#F85149]/30">Escalate</span>
+</div>
+</div>
+<p class="font-body-xs text-body-xs text-on-surface-variant line-clamp-2 mb-1.5 leading-relaxed">
+            SIP debit failed twice for ICICI Prudential Bluechip without folio alert...
+          </p>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-[#101d2a] font-trace-mono text-[10px] text-outline border border-[#243042]">Systemic Failure</span>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="p-3 hover:bg-[#18202B]/60 cursor-pointer transition-colors border-l-2 border-transparent">
+<div class="flex items-center justify-between text-trace-mono mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-code-inline font-semibold text-on-surface">CMP-84915</span>
+<span class="text-outline">•</span>
+<span class="text-on-surface-variant">28m ago</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-[#D29922]/20 text-[#D29922] border border-[#D29922]/40">P2</span>
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-primary/10 text-primary border border-primary/30">Reply</span>
+</div>
+</div>
+<p class="font-body-xs text-body-xs text-on-surface-variant line-clamp-2 mb-1.5 leading-relaxed">
+            NAV discrepancy on Nippon India Small Cap fund purchase dated 01-Jul...
+          </p>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-[#101d2a] font-trace-mono text-[10px] text-outline border border-[#243042]">NAV Cut-off</span>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="p-3 hover:bg-[#18202B]/60 cursor-pointer transition-colors border-l-2 border-transparent">
+<div class="flex items-center justify-between text-trace-mono mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-code-inline font-semibold text-on-surface">CMP-84909</span>
+<span class="text-outline">•</span>
+<span class="text-on-surface-variant">1h ago</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-[#8B98A9]/20 text-[#8B98A9] border border-[#8B98A9]/40">P3</span>
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-[#8B98A9]/10 text-on-surface-variant border border-[#243042]">Handoff</span>
+</div>
+</div>
+<p class="font-body-xs text-body-xs text-on-surface-variant line-clamp-2 mb-1.5 leading-relaxed">
+            Requesting consolidated statement for tax filing FY25-26...
+          </p>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-[#101d2a] font-trace-mono text-[10px] text-outline border border-[#243042]">CAS Request</span>
+</div>
+</div>
+<!-- Row 5 -->
+<div class="p-3 hover:bg-[#18202B]/60 cursor-pointer transition-colors border-l-2 border-transparent">
+<div class="flex items-center justify-between text-trace-mono mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-code-inline font-semibold text-on-surface">CMP-84897</span>
+<span class="text-outline">•</span>
+<span class="text-on-surface-variant">2h ago</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-[#8B98A9]/20 text-[#8B98A9] border border-[#8B98A9]/40">P3</span>
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-tertiary/10 text-tertiary-fixed border border-tertiary/30">Disagree</span>
+</div>
+</div>
+<p class="font-body-xs text-body-xs text-on-surface-variant line-clamp-2 mb-1.5 leading-relaxed">
+            Demanding compensation for index tracking error in Nifty 50 ETF...
+          </p>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-[#101d2a] font-trace-mono text-[10px] text-outline border border-[#243042]">Passive Benchmark</span>
+</div>
+</div>
+<!-- Row 6 -->
+<div class="p-3 hover:bg-[#18202B]/60 cursor-pointer transition-colors border-l-2 border-transparent">
+<div class="flex items-center justify-between text-trace-mono mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-code-inline font-semibold text-on-surface">CMP-84880</span>
+<span class="text-outline">•</span>
+<span class="text-on-surface-variant">3h ago</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-[#F85149]/20 text-[#F85149] border border-[#F85149]/40">P1</span>
+<span class="px-1.5 py-0.2 rounded font-code-inline text-[10px] font-semibold bg-[#F85149]/10 text-[#F85149] border border-[#F85149]/30">Refuse</span>
+</div>
+</div>
+<p class="font-body-xs text-body-xs text-on-surface-variant line-clamp-2 mb-1.5 leading-relaxed">
+            Demanding guaranteed 18% annual return on multi-cap fund portfolio...
+          </p>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-error/10 font-trace-mono text-[10px] text-error border border-error/30">Illegal Assured Return</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- CENTER COLUMN: Active Case & Multi-Agent Workbench (fluid, 6 of 12 cols) -->
+<section class="col-span-12 lg:col-span-6 xl:col-span-6 bg-[#0B0F14] flex flex-col border-r border-[#243042]">
+<!-- Center Ticket Header Bar -->
+<div class="p-4 bg-[#121821] border-b border-[#243042]">
+<div class="flex items-center justify-between text-body-xs font-code-inline text-on-surface-variant mb-2">
+<div class="flex items-center gap-2">
+<span>Complaints</span>
+<span class="text-outline">›</span>
+<span>Mutual Funds</span>
+<span class="text-outline">›</span>
+<span class="text-primary font-semibold">CMP-84920</span>
+</div>
+<div class="flex items-center gap-2 font-trace-mono">
+<span class="px-2 py-0.5 rounded bg-[#D29922]/20 text-[#D29922] border border-[#D29922]/40 font-semibold">P2 Moderate</span>
+<span class="px-2 py-0.5 rounded bg-[#18202B] text-primary border border-[#243042] flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] animate-spin">timelapse</span>
+              SLA: 48m remaining
+            </span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-trace-mono font-code-inline text-on-surface-variant pt-1">
+<span>Folio: <strong class="text-on-surface font-semibold">9102-****-3312</strong></span>
+<span class="text-[#243042]">•</span>
+<span>KYC: <strong class="text-primary">Verified (Tier 2)</strong></span>
+<span class="text-[#243042]">•</span>
+<span>Platform: Web App (v4.18)</span>
+<span class="text-[#243042]">•</span>
+<span class="text-error font-medium">SEBI Reg Flag #SCORES-2026-9041</span>
+</div>
+</div>
+<!-- Scrollable Ticket Body -->
+<div class="p-4 space-y-4 overflow-y-auto">
+<!-- Section 1: Customer Ingress Statement -->
+<div class="bg-[#121821] rounded-[10px] border border-[#243042] p-4 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">security</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Customer Ingress Statement</h2>
+</div>
+<div class="flex items-center gap-1 font-trace-mono text-trace-mono text-outline">
+<span class="material-symbols-outlined text-[13px]">lock</span>
+<span>PII redacted at ingress, raw values never stored</span>
+</div>
+</div>
+<div class="p-3 bg-[#0B0F14] rounded-lg border border-[#243042] text-body-sm text-on-surface leading-relaxed font-body-sm selection:bg-primary-container selection:text-on-primary-container">
+            Hello, I requested full redemption of my units in HDFC Large Cap Fund on 02-Jul-2026. However, my account was deducted a 1% exit load. My PAN is <span class="font-code-inline px-2 py-0.5 rounded bg-[#1e2b39] border border-[#243042] text-amber-300 text-code-inline font-semibold tracking-wider">[PAN]</span> and registered mobile is <span class="font-code-inline px-2 py-0.5 rounded bg-[#1e2b39] border border-[#243042] text-amber-300 text-code-inline font-semibold tracking-wider">[PHONE]</span>. As per my calculation I purchased on 29-Jun-2025 which is over 365 days. Please refund the INR 14,250 deducted immediately or I will escalate to SEBI SCORES portal.
+          </div>
+</div>
+<!-- Section 2: Agent Analysis Engine (Three Parallel Cards) -->
+<div class="space-y-2.5">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-[12px] tracking-wider uppercase text-on-surface-variant font-semibold">Agent Analysis Engine</span>
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#121821] border border-[#243042] text-trace-mono font-code-inline text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>Running in parallel</span>
+</div>
+</div>
+<span class="font-trace-mono text-trace-mono text-outline">Parallel sync completed in 312ms</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<!-- Agent 1: Facts Agent -->
+<div class="bg-[#18202B] border border-[#58A6FF]/40 rounded-[10px] p-3 flex flex-col justify-between shadow-[0_0_12px_rgba(88,166,255,0.06)]">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-[#58A6FF]">dataset</span>
+<span class="font-code-inline text-[12px] font-semibold text-on-surface">Facts Agent</span>
+</div>
+<span class="px-1.5 py-0.2 rounded font-trace-mono text-[10px] font-medium bg-[#58A6FF]/10 text-[#58A6FF] border border-[#58A6FF]/30">Covered</span>
+</div>
+<div class="font-trace-mono text-[10px] text-outline mb-2">model pick → code output</div>
+<div class="space-y-1.5 text-body-xs font-body-xs">
+<div>
+<span class="text-outline text-[11px] block">Scheme</span>
+<span class="text-on-surface font-medium">HDFC Large Cap Fund (Direct Growth)</span>
+</div>
+<div>
+<span class="text-outline text-[11px] block">Section</span>
+<span class="text-on-surface font-code-inline text-[11px]">Exit load policy (SEBI Reg 1996 §49)</span>
+</div>
+<div class="p-2 rounded bg-[#0B0F14] border border-[#243042] text-[11px] text-on-surface-variant italic">
+                    "Exit load of 1% if redeemed within 1 year (365 days) from allotment date. Nil exit load after 365 completed calendar days."
+                  </div>
+</div>
+</div>
+<div class="mt-3 pt-2 border-t border-[#243042] flex items-center justify-between text-trace-mono text-outline">
+<a class="text-[#58A6FF] hover:underline font-code-inline text-[11px] flex items-center gap-0.5" href="#">
+                  HDFC-LC-SID-2025-v4.pdf §4.2 ↗
+                </a>
+<span>Checked 25-Jun</span>
+</div>
+</div>
+<!-- Agent 2: Pattern Agent -->
+<div class="bg-[#18202B] border border-[#A371F7]/40 rounded-[10px] p-3 flex flex-col justify-between shadow-[0_0_12px_rgba(163,113,247,0.06)]">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-[#A371F7]">hub</span>
+<span class="font-code-inline text-[12px] font-semibold text-on-surface">Pattern Agent</span>
+</div>
+<span class="px-1.5 py-0.2 rounded font-trace-mono text-[10px] font-medium bg-[#A371F7]/10 text-[#A371F7] border border-[#A371F7]/30">Recurring</span>
+</div>
+<div class="font-trace-mono text-[10px] text-outline mb-2">model pick → code output</div>
+<div class="space-y-2 text-body-xs font-body-xs">
+<div>
+<span class="text-outline text-[11px] block">Theme</span>
+<span class="text-on-surface font-medium">Fees & brokerage / Exit load dispute</span>
+</div>
+<div class="grid grid-cols-2 gap-2 bg-[#0B0F14] p-2 rounded border border-[#243042] text-center font-code-inline">
+<div>
+<div class="text-[14px] font-bold text-on-surface">136</div>
+<div class="text-[9px] text-outline uppercase">Total reviews</div>
+</div>
+<div>
+<div class="text-[14px] font-bold text-[#A371F7]">12</div>
+<div class="text-[9px] text-outline uppercase">Last 7 days</div>
+</div>
+</div>
+<!-- Mini Sparkline inline SVG -->
+<div class="py-1">
+<div class="flex justify-between text-[10px] font-trace-mono text-outline mb-1">
+<span>7-Day Volume Spike</span>
+<span>12 Apr – 4 Jul</span>
+</div>
+<svg class="w-full h-8 text-[#A371F7]" fill="none" preserveaspectratio="none" viewbox="0 0 100 28">
+<path d="M0,22 Q15,20 28,18 T50,14 T72,21 T85,6 L100,4 L100,28 L0,28 Z" fill="rgba(163, 113, 247, 0.15)"></path>
+<path d="M0,22 Q15,20 28,18 T50,14 T72,21 T85,6 L100,4" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<div class="mt-2 pt-2 border-t border-[#243042] text-trace-mono text-on-surface-variant text-[11px] leading-tight">
+                Root: High correlation with T+2 leap year settlement day calculation confusion.
+              </div>
+</div>
+<!-- Agent 3: Compliance Agent -->
+<div class="bg-[#18202B] border border-[#D29922]/40 rounded-[10px] p-3 flex flex-col justify-between shadow-[0_0_12px_rgba(210,153,34,0.06)]">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-[#D29922]">policy</span>
+<span class="font-code-inline text-[12px] font-semibold text-on-surface">Compliance Agent</span>
+</div>
+<span class="px-1.5 py-0.2 rounded font-trace-mono text-[10px] font-medium bg-[#D29922]/10 text-[#D29922] border border-[#D29922]/30">Evaluated</span>
+</div>
+<div class="font-trace-mono text-[10px] text-outline mb-2">model pick → code output</div>
+<div class="space-y-2 text-body-xs">
+<span class="text-outline text-[11px] block">Flag Chips</span>
+<div class="flex flex-col gap-1.5 font-code-inline text-[11px]">
+<div class="flex items-center justify-between px-2 py-1 rounded bg-[#0B0F14] border border-[#243042] text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="text-primary text-[12px]">✓</span> Advice:</span>
+<span class="text-outline font-semibold">Clear</span>
+</div>
+<div class="flex items-center justify-between px-2 py-1 rounded bg-[#0B0F14] border border-[#243042] text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="text-primary text-[12px]">✓</span> Performance claim:</span>
+<span class="text-outline font-semibold">None detected</span>
+</div>
+<div class="flex items-center justify-between px-2 py-1 rounded bg-[#D29922]/10 border border-[#D29922]/30 text-[#D29922]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">lock</span> PII Guard:</span>
+<span class="font-bold">PAN, PHONE</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-2 pt-2 border-t border-[#243042] text-trace-mono text-outline text-[10px] leading-tight">
+                SEBI Circular SEBI/HO/IMD/DF2/CIR/P/2018/137 §3.1 — Customer privacy tokenization passed.
+              </div>
+</div>
+</div>
+</div>
+<!-- Section 3: Generated Reply Draft -->
+<div class="bg-[#121821] rounded-[10px] border border-[#243042] p-4 shadow-sm">
+<div class="flex items-center justify-between mb-2.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">auto_read_pause</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Generated Reply Draft</h2>
+<span class="font-trace-mono text-trace-mono text-outline">(Orchestrator v2.4)</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-[#18202B] text-primary font-code-inline text-trace-mono border border-[#243042]">3 / 3 sentences</span>
+</div>
+<div class="p-3.5 bg-[#0B0F14] rounded-lg border border-[#243042] text-body-sm text-on-surface leading-relaxed relative">
+<span class="text-on-surface">Dear Investor, thank you for writing in regarding the exit load applied to your redemption on HDFC Large Cap Fund. Upon verification, your units were allotted on 03-Jul-2025 following fund settlement clearing, meaning your redemption on 02-Jul-2026 occurred at 364 calendar days, within the fund's 1-year exit load window [<a class="text-[#58A6FF] font-code-inline text-code-inline underline decoration-dotted hover:text-primary transition-colors" href="#">SID §4.2 Source</a>]. As a result, the applicable 1% exit load of ₹14,250 was correctly deducted in accordance with SEBI mutual fund guidelines.</span>
+</div>
+<div class="mt-3 flex items-center justify-between text-body-xs font-code-inline text-on-surface-variant">
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded bg-[#18202B] hover:bg-surface-variant hover:text-on-surface border border-[#243042] text-trace-mono flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+                Copy text
+              </button>
+<button class="px-2.5 py-1 rounded bg-[#18202B] hover:bg-surface-variant hover:text-on-surface border border-[#243042] text-trace-mono flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">autorenew</span>
+                Regenerate sentence 2
+              </button>
+<button class="px-2.5 py-1 rounded bg-[#18202B] hover:bg-surface-variant hover:text-on-surface border border-[#243042] text-trace-mono flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">data_object</span>
+                View raw tokens
+              </button>
+</div>
+<span class="text-trace-mono text-outline">Deterministic Seed: #99481a</span>
+</div>
+</div>
+<!-- Section 4: Execution Trace Timeline -->
+<div class="bg-[#121821] rounded-[10px] border border-[#243042] p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-outline">linear_scale</span>
+<h2 class="font-headline-sm text-[13px] text-on-surface uppercase tracking-wide">Execution Trace Timeline</h2>
+</div>
+<div class="font-code-inline text-trace-mono text-primary bg-[#18202B] px-2 py-0.5 rounded border border-[#243042]">
+              482ms total latency
+            </div>
+</div>
+<!-- Gantt-style Pipeline Visualization -->
+<div class="space-y-1.5 font-trace-mono text-[11px]">
+<!-- Stage 1: Ingress -->
+<div class="grid grid-cols-12 gap-2 items-center">
+<span class="col-span-3 text-outline truncate">Ingress [18ms]</span>
+<div class="col-span-9 bg-[#0B0F14] h-3 rounded overflow-hidden flex">
+<div class="bg-outline h-full w-[4%] rounded-sm"></div>
+</div>
+</div>
+<!-- Stage 2: Parallel Agents Stack -->
+<div class="grid grid-cols-12 gap-2 items-center">
+<span class="col-span-3 text-[#58A6FF] truncate">Facts [184ms]</span>
+<div class="col-span-9 bg-[#0B0F14] h-3 rounded overflow-hidden flex">
+<div class="w-[4%] h-full"></div>
+<div class="bg-[#58A6FF] h-full w-[38%] rounded-sm"></div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-2 items-center">
+<span class="col-span-3 text-[#A371F7] truncate">Pattern [210ms]</span>
+<div class="col-span-9 bg-[#0B0F14] h-3 rounded overflow-hidden flex">
+<div class="w-[4%] h-full"></div>
+<div class="bg-[#A371F7] h-full w-[43%] rounded-sm"></div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-2 items-center">
+<span class="col-span-3 text-[#D29922] truncate">Compliance [195ms]</span>
+<div class="col-span-9 bg-[#0B0F14] h-3 rounded overflow-hidden flex">
+<div class="w-[4%] h-full"></div>
+<div class="bg-[#D29922] h-full w-[40%] rounded-sm"></div>
+</div>
+</div>
+<!-- Stage 3: Draft -->
+<div class="grid grid-cols-12 gap-2 items-center">
+<span class="col-span-3 text-primary truncate">Draft [178ms]</span>
+<div class="col-span-9 bg-[#0B0F14] h-3 rounded overflow-hidden flex">
+<div class="w-[47%] h-full"></div>
+<div class="bg-primary h-full w-[37%] rounded-sm"></div>
+</div>
+</div>
+<!-- Stage 4: Reviewer -->
+<div class="grid grid-cols-12 gap-2 items-center">
+<span class="col-span-3 text-[#3FB950] truncate">Reviewer [76ms]</span>
+<div class="col-span-9 bg-[#0B0F14] h-3 rounded overflow-hidden flex">
+<div class="w-[84%] h-full"></div>
+<div class="bg-[#3FB950] h-full w-[16%] rounded-sm"></div>
+</div>
+</div>
+</div>
+<div class="mt-3 pt-2 border-t border-[#243042] flex items-center justify-between font-trace-mono text-[10px] text-outline">
+<span>T+0ms (Ingress)</span>
+<span>T+228ms (Agents Synchronized)</span>
+<span>T+482ms (Ready for Specialist)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT COLUMN: Decision & Compliance Verification Panel (3 of 12 cols, ~340px) -->
+<aside class="col-span-12 lg:col-span-3 xl:col-span-3 bg-[#121821] p-4 space-y-4 min-h-full flex flex-col justify-between">
+<div class="space-y-4">
+<!-- Automated Reviewer Audit Card -->
+<div class="bg-[#18202B] rounded-[10px] border border-[#243042] p-3.5">
+<div class="flex items-center justify-between mb-2.5">
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">Automated Reviewer</div>
+<div class="font-trace-mono text-[11px] text-outline">Round 1 of 2</div>
+</div>
+<!-- Prominent PASS banner -->
+<div class="px-3 py-1 rounded bg-[#3FB950]/15 text-[#3FB950] border border-[#3FB950]/40 font-code-inline font-bold text-headline-sm tracking-wide">
+              PASS
+            </div>
+</div>
+<!-- 5 Crisp Verification Line Items -->
+<div class="space-y-2 mt-3 pt-2 border-t border-[#243042] font-body-xs text-[12px]">
+<div class="flex items-start gap-2">
+<span class="text-[#3FB950] font-bold text-[14px]">✓</span>
+<div>
+<span class="text-on-surface font-medium block">1. Citation</span>
+<span class="text-on-surface-variant font-trace-mono text-[11px]">Verified (SID §4.2 matched allotment date)</span>
+</div>
+</div>
+<div class="flex items-start gap-2">
+<span class="text-[#3FB950] font-bold text-[14px]">✓</span>
+<div>
+<span class="text-on-surface font-medium block">2. Advice</span>
+<span class="text-on-surface-variant font-trace-mono text-[11px]">No unlicensed advisory or recommendation</span>
+</div>
+</div>
+<div class="flex items-start gap-2">
+<span class="text-[#3FB950] font-bold text-[14px]">✓</span>
+<div>
+<span class="text-on-surface font-medium block">3. Performance</span>
+<span class="text-on-surface-variant font-trace-mono text-[11px]">No forward-looking return claims</span>
+</div>
+</div>
+<div class="flex items-start gap-2">
+<span class="text-[#3FB950] font-bold text-[14px]">✓</span>
+<div>
+<span class="text-on-surface font-medium block">4. PII Protection</span>
+<span class="text-on-surface-variant font-trace-mono text-[11px]">Redacted tokens preserved; zero raw leaks</span>
+</div>
+</div>
+<div class="flex items-start gap-2">
+<span class="text-[#3FB950] font-bold text-[14px]">✓</span>
+<div>
+<span class="text-on-surface font-medium block">5. Shape</span>
+<span class="text-on-surface-variant font-trace-mono text-[11px]">Under 3 sentences, 78 words, compliant tone</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Routing Note (Internal Ops) -->
+<div class="bg-[#18202B] rounded-[10px] border border-[#243042] p-3.5 space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-[12px] uppercase tracking-wide text-on-surface-variant font-semibold">Routing Metadata</span>
+<span class="px-2 py-0.5 rounded bg-[#D29922]/15 text-[#D29922] font-trace-mono text-[10px] border border-[#D29922]/30 font-medium">Ticket stays open</span>
+</div>
+<div class="space-y-1.5 font-trace-mono text-[11px]">
+<div class="flex justify-between">
+<span class="text-outline">Assigned Team:</span>
+<span class="text-on-surface font-medium">Fees and mutual fund ops</span>
+</div>
+<div class="flex justify-between">
+<span class="text-outline">Priority Tier:</span>
+<span class="text-on-surface font-medium">P2 - Standard Dispute</span>
+</div>
+<div class="pt-1 text-on-surface-variant text-[11px] leading-tight">
+<strong class="text-outline font-normal">Reason:</strong> Awaiting customer acknowledgment post-draft dispatch or SEBI closure receipt.
+            </div>
+</div>
+</div>
+<!-- Refine Prompt Box -->
+<div class="bg-[#18202B] rounded-[10px] border border-[#243042] p-3.5 space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface">Refine Draft</span>
+<span class="font-code-inline text-trace-mono text-outline">Refinements 1 / 5</span>
+</div>
+<div class="relative">
+<textarea class="w-full p-2 rounded bg-[#0B0F14] border border-[#243042] text-body-xs font-code-inline text-on-surface placeholder:text-outline focus:outline-none focus:border-primary resize-none transition-colors" placeholder="Instruct orchestrator to adjust tone or parameters..." rows="2"></textarea>
+</div>
+<!-- Quick Action Chips -->
+<div class="flex flex-wrap gap-1.5">
+<button class="px-2 py-1 rounded bg-[#101d2a] hover:bg-[#1e2b39] text-on-surface-variant hover:text-on-surface border border-[#243042] text-trace-mono font-code-inline transition-colors">+ Shorter</button>
+<button class="px-2 py-1 rounded bg-[#101d2a] hover:bg-[#1e2b39] text-on-surface-variant hover:text-on-surface border border-[#243042] text-trace-mono font-code-inline transition-colors">+ Different scheme</button>
+<button class="px-2 py-1 rounded bg-[#101d2a] hover:bg-[#1e2b39] text-on-surface-variant hover:text-on-surface border border-[#243042] text-trace-mono font-code-inline transition-colors">+ Check fee issue from last week</button>
+</div>
+<!-- Agent re-run footprint -->
+<div class="pt-2 border-t border-[#243042] flex items-start gap-1.5 text-trace-mono text-outline leading-tight">
+<div class="flex items-center gap-1 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#58A6FF]" title="Facts Agent"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-[#A371F7]" title="Pattern Agent"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-[#D29922]" title="Compliance Agent"></span>
+</div>
+<span>Re-run footprint: Only Draft & Reviewer will re-execute on tone tweak.</span>
+</div>
+</div>
+</div>
+<!-- Human Verification Approval Gate (STRICT COMPLIANCE: NEVER SHOW SEND) -->
+<div class="pt-4 border-t border-[#243042] space-y-2">
+<div class="flex items-center gap-1.5 text-trace-mono text-amber-300">
+<span class="material-symbols-outlined text-[14px]">gavel</span>
+<span>Human verification required before dispatch staging.</span>
+</div>
+<!-- Primary Action Button: Approve & create email draft -->
+<button class="w-full bg-[#2DD4BF] text-[#0B0F14] font-headline-sm text-headline-sm font-semibold py-3 px-4 rounded-lg hover:bg-[#26bba8] transition flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2DD4BF]/50" id="approve-btn">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Approve & create email draft</span>
+</button>
+<!-- Explicit Helper Subtitle: Nothing is sent -->
+<p class="text-center font-trace-mono text-[11px] text-outline leading-relaxed">
+          Appends a redacted record and saves an email draft. Nothing is sent.
+        </p>
+</div>
+</aside>
+</div>
+<!-- Inline Operational Micro-Interactions Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const approveBtn = document.getElementById('approve-btn');
+      if (approveBtn) {
+        approveBtn.addEventListener('click', function() {
+          this.classList.remove('bg-[#2DD4BF]', 'hover:bg-[#26bba8]');
+          this.classList.add('bg-[#3FB950]', 'text-[#0B0F14]');
+          this.innerHTML = '<span class="material-symbols-outlined text-[18px]">task_alt</span><span>Draft Staged in Dispatch Desk</span>';
+          
+          setTimeout(() => {
+            this.classList.remove('bg-[#3FB950]');
+            this.classList.add('bg-[#2DD4BF]', 'hover:bg-[#26bba8]');
+            this.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span><span>Approve & create email draft</span>';
+          }, 3500);
+        });
+      }
+    });
+  </script>
+</div></main></body></html>

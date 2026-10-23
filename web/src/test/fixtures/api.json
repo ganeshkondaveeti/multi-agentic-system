@@ -1,0 +1,2843 @@
+{
+ "views": {
+  "clean_hit": {
+   "session_id": "ff05d714b2094b868eabfdefb4c72d1d",
+   "session": {
+    "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund?",
+    "pii_types": [],
+    "facts": {
+     "status": "covered",
+     "scheme_id": "large_cap",
+     "section_title": "Exit load",
+     "fact": "Exit load of 1% if redeemed within 1 year",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof"
+     ]
+    },
+    "pattern": {
+     "theme_id": "fees_brokerage",
+     "theme_name": "Fees & brokerage",
+     "signal": "recurring",
+     "count": 136,
+     "recent_count": 12,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [],
+     "pii_types": [],
+     "advice_refusal": false,
+     "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund?"
+    },
+    "draft": {
+     "reply": "Exit load of 1% if redeemed within 1 year. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "disposition": "escalate",
+     "disagreement": false,
+     "routing_note": {
+      "team": "Fees and mutual fund ops",
+      "priority": "P2",
+      "why": "Facts covered for large_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+     }
+    },
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for large_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "review": {
+     "status": "pass",
+     "round": 1,
+     "failures": []
+    },
+    "advice_refusal": false,
+    "refinement_count": 0,
+    "agents_fired": []
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 10.581
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 10.932
+    },
+    {
+     "seq": 2,
+     "node": "compliance",
+     "kind": "start",
+     "elapsed_ms": 10.948
+    },
+    {
+     "seq": 3,
+     "node": "facts",
+     "kind": "start",
+     "elapsed_ms": 10.957
+    },
+    {
+     "seq": 4,
+     "node": "pattern",
+     "kind": "start",
+     "elapsed_ms": 10.964
+    },
+    {
+     "seq": 5,
+     "node": "compliance",
+     "kind": "return",
+     "elapsed_ms": 12.402
+    },
+    {
+     "seq": 6,
+     "node": "facts",
+     "kind": "return",
+     "elapsed_ms": 12.413
+    },
+    {
+     "seq": 7,
+     "node": "pattern",
+     "kind": "return",
+     "elapsed_ms": 12.422
+    },
+    {
+     "seq": 8,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 12.503
+    },
+    {
+     "seq": 9,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 12.638
+    },
+    {
+     "seq": 10,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 12.647
+    },
+    {
+     "seq": 11,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 12.992
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "cues"
+   },
+   "turn": {
+    "kind": "complaint",
+    "ran": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   "approvable": true,
+   "approved": null,
+   "refinements_left": 5,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  "corpus_miss": {
+   "session_id": "9ca2a80ef0fc41889ddddd7862aa9e08",
+   "session": {
+    "redacted_text": "My order failed on Nippon Small Cap",
+    "pii_types": [],
+    "facts": {
+     "status": "not_covered",
+     "scheme_id": null,
+     "section_title": null,
+     "fact": null,
+     "citation": null,
+     "last_checked": null,
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof",
+      "Key fund facts",
+      "Exit load",
+      "Benchmark",
+      "Investment objective",
+      "Stamp duty and tax",
+      "Fund management",
+      "Minimum investments"
+     ]
+    },
+    "pattern": {
+     "theme_id": "trading_charts",
+     "theme_name": "Trading, charts & orders",
+     "signal": "rising",
+     "count": 503,
+     "recent_count": 50,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [],
+     "pii_types": [],
+     "advice_refusal": false,
+     "redacted_text": "My order failed on Nippon Small Cap"
+    },
+    "draft": {
+     "reply": "The scheme pages we hold do not cover this question. We searched large_cap, mid_cap, small_cap, gold_fof, silver_fof for Key fund facts, Exit load, Benchmark, Investment objective, Stamp duty and tax, Fund management, Minimum investments and found no section that answers it. A support specialist will review this ticket and reply directly.",
+     "last_checked": null,
+     "citation": null,
+     "disposition": "handoff",
+     "disagreement": false,
+     "routing_note": {
+      "team": "Trading platform",
+      "priority": "P1",
+      "why": "Facts not_covered. Pattern trading_charts is rising across 503 reviews from 2026-04-12 to 2026-07-04."
+     }
+    },
+    "routing_note": {
+     "team": "Trading platform",
+     "priority": "P1",
+     "why": "Facts not_covered. Pattern trading_charts is rising across 503 reviews from 2026-04-12 to 2026-07-04."
+    },
+    "review": {
+     "status": "pass",
+     "round": 1,
+     "failures": []
+    },
+    "advice_refusal": false,
+    "refinement_count": 0,
+    "agents_fired": []
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 2.231
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 2.438
+    },
+    {
+     "seq": 2,
+     "node": "compliance",
+     "kind": "start",
+     "elapsed_ms": 2.451
+    },
+    {
+     "seq": 3,
+     "node": "facts",
+     "kind": "start",
+     "elapsed_ms": 2.459
+    },
+    {
+     "seq": 4,
+     "node": "pattern",
+     "kind": "start",
+     "elapsed_ms": 2.465
+    },
+    {
+     "seq": 5,
+     "node": "compliance",
+     "kind": "return",
+     "elapsed_ms": 3.841
+    },
+    {
+     "seq": 6,
+     "node": "facts",
+     "kind": "return",
+     "elapsed_ms": 3.856
+    },
+    {
+     "seq": 7,
+     "node": "pattern",
+     "kind": "return",
+     "elapsed_ms": 3.864
+    },
+    {
+     "seq": 8,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 3.942
+    },
+    {
+     "seq": 9,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 4.048
+    },
+    {
+     "seq": 10,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 4.057
+    },
+    {
+     "seq": 11,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 5.096
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "cues"
+   },
+   "turn": {
+    "kind": "complaint",
+    "ran": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   "approvable": true,
+   "approved": null,
+   "refinements_left": 5,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  "recurring_theme": {
+   "session_id": "58e4e0674b044650bf4c8b58edd9c4bd",
+   "session": {
+    "redacted_text": "Why is there an exit load fee on my HDFC Mid Cap Fund redemption?",
+    "pii_types": [],
+    "facts": {
+     "status": "covered",
+     "scheme_id": "mid_cap",
+     "section_title": "Exit load",
+     "fact": "Exit load of 1% if redeemed within 1 year.",
+     "citation": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof"
+     ]
+    },
+    "pattern": {
+     "theme_id": "fees_brokerage",
+     "theme_name": "Fees & brokerage",
+     "signal": "recurring",
+     "count": 136,
+     "recent_count": 12,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [],
+     "pii_types": [],
+     "advice_refusal": false,
+     "redacted_text": "Why is there an exit load fee on my HDFC Mid Cap Fund redemption?"
+    },
+    "draft": {
+     "reply": "Exit load of 1% if redeemed within 1 year. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "citation": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+     "disposition": "escalate",
+     "disagreement": false,
+     "routing_note": {
+      "team": "Fees and mutual fund ops",
+      "priority": "P2",
+      "why": "Facts covered for mid_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+     }
+    },
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for mid_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "review": {
+     "status": "pass",
+     "round": 1,
+     "failures": []
+    },
+    "advice_refusal": false,
+    "refinement_count": 0,
+    "agents_fired": []
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 2.136
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 2.325
+    },
+    {
+     "seq": 2,
+     "node": "compliance",
+     "kind": "start",
+     "elapsed_ms": 2.336
+    },
+    {
+     "seq": 3,
+     "node": "facts",
+     "kind": "start",
+     "elapsed_ms": 2.345
+    },
+    {
+     "seq": 4,
+     "node": "pattern",
+     "kind": "start",
+     "elapsed_ms": 2.351
+    },
+    {
+     "seq": 5,
+     "node": "compliance",
+     "kind": "return",
+     "elapsed_ms": 3.517
+    },
+    {
+     "seq": 6,
+     "node": "facts",
+     "kind": "return",
+     "elapsed_ms": 3.527
+    },
+    {
+     "seq": 7,
+     "node": "pattern",
+     "kind": "return",
+     "elapsed_ms": 3.534
+    },
+    {
+     "seq": 8,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 3.617
+    },
+    {
+     "seq": 9,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 3.728
+    },
+    {
+     "seq": 10,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 3.738
+    },
+    {
+     "seq": 11,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 4.044
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "cues"
+   },
+   "turn": {
+    "kind": "complaint",
+    "ran": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   "approvable": true,
+   "approved": null,
+   "refinements_left": 5,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  "pii": {
+   "session_id": "b40557087dc84eb7ad0a2e153d45c08c",
+   "session": {
+    "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund? My PAN is [PAN] and my phone is [PHONE].",
+    "pii_types": [
+     "PAN",
+     "PHONE"
+    ],
+    "facts": {
+     "status": "covered",
+     "scheme_id": "large_cap",
+     "section_title": "Exit load",
+     "fact": "Exit load of 1% if redeemed within 1 year",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof"
+     ]
+    },
+    "pattern": {
+     "theme_id": "fees_brokerage",
+     "theme_name": "Fees & brokerage",
+     "signal": "recurring",
+     "count": 136,
+     "recent_count": 12,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [
+      "pii"
+     ],
+     "pii_types": [
+      "PAN",
+      "PHONE"
+     ],
+     "advice_refusal": false,
+     "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund? My PAN is [PAN] and my phone is [PHONE]."
+    },
+    "draft": {
+     "reply": "Exit load of 1% if redeemed within 1 year. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "disposition": "escalate",
+     "disagreement": false,
+     "routing_note": {
+      "team": "Fees and mutual fund ops",
+      "priority": "P2",
+      "why": "Facts covered for large_cap Exit load. Ingress redacted PAN, PHONE. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+     }
+    },
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for large_cap Exit load. Ingress redacted PAN, PHONE. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "review": {
+     "status": "pass",
+     "round": 1,
+     "failures": []
+    },
+    "advice_refusal": false,
+    "refinement_count": 0,
+    "agents_fired": []
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 2.378
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 2.593
+    },
+    {
+     "seq": 2,
+     "node": "compliance",
+     "kind": "start",
+     "elapsed_ms": 2.606
+    },
+    {
+     "seq": 3,
+     "node": "facts",
+     "kind": "start",
+     "elapsed_ms": 2.617
+    },
+    {
+     "seq": 4,
+     "node": "pattern",
+     "kind": "start",
+     "elapsed_ms": 2.624
+    },
+    {
+     "seq": 5,
+     "node": "compliance",
+     "kind": "return",
+     "elapsed_ms": 3.811
+    },
+    {
+     "seq": 6,
+     "node": "facts",
+     "kind": "return",
+     "elapsed_ms": 3.822
+    },
+    {
+     "seq": 7,
+     "node": "pattern",
+     "kind": "return",
+     "elapsed_ms": 3.83
+    },
+    {
+     "seq": 8,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 3.911
+    },
+    {
+     "seq": 9,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 4.022
+    },
+    {
+     "seq": 10,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 4.032
+    },
+    {
+     "seq": 11,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 4.344
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "cues"
+   },
+   "turn": {
+    "kind": "complaint",
+    "ran": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   "approvable": true,
+   "approved": null,
+   "refinements_left": 5,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  "refuse": {
+   "session_id": "6e80a2a9779c47daadd6a46d953ad317",
+   "session": {
+    "redacted_text": "What returns should I expect from HDFC Large Cap?",
+    "pii_types": [],
+    "facts": {
+     "status": "not_covered",
+     "scheme_id": null,
+     "section_title": null,
+     "fact": null,
+     "citation": null,
+     "last_checked": null,
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof",
+      "Key fund facts",
+      "Exit load",
+      "Benchmark",
+      "Investment objective",
+      "Stamp duty and tax",
+      "Fund management",
+      "Minimum investments"
+     ]
+    },
+    "pattern": {
+     "theme_id": "other",
+     "theme_name": "Other feedback",
+     "signal": "one-off",
+     "count": 709,
+     "recent_count": 86,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [
+      "advice",
+      "performance_claim"
+     ],
+     "pii_types": [],
+     "advice_refusal": true,
+     "redacted_text": "What returns should I expect from HDFC Large Cap?"
+    },
+    "draft": {
+     "reply": "We are not able to give investment advice, so we cannot say whether to invest in, stay in, or exit a scheme, or what it may earn. A SEBI-registered investment adviser can help with that decision. We can still help with scheme charges, SIP setup, and account questions.",
+     "last_checked": null,
+     "citation": null,
+     "disposition": "refuse",
+     "disagreement": false,
+     "routing_note": {
+      "team": "General support",
+      "priority": "P3",
+      "why": "Facts not_covered. Compliance flagged advice, performance_claim, so the reply refuses. Pattern other is one-off across 709 reviews from 2026-04-12 to 2026-07-04."
+     }
+    },
+    "routing_note": {
+     "team": "General support",
+     "priority": "P3",
+     "why": "Facts not_covered. Compliance flagged advice, performance_claim, so the reply refuses. Pattern other is one-off across 709 reviews from 2026-04-12 to 2026-07-04."
+    },
+    "review": {
+     "status": "pass",
+     "round": 1,
+     "failures": []
+    },
+    "advice_refusal": true,
+    "refinement_count": 0,
+    "agents_fired": []
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 2.145
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 2.409
+    },
+    {
+     "seq": 2,
+     "node": "compliance",
+     "kind": "start",
+     "elapsed_ms": 2.422
+    },
+    {
+     "seq": 3,
+     "node": "facts",
+     "kind": "start",
+     "elapsed_ms": 2.431
+    },
+    {
+     "seq": 4,
+     "node": "pattern",
+     "kind": "start",
+     "elapsed_ms": 2.436
+    },
+    {
+     "seq": 5,
+     "node": "compliance",
+     "kind": "return",
+     "elapsed_ms": 3.611
+    },
+    {
+     "seq": 6,
+     "node": "facts",
+     "kind": "return",
+     "elapsed_ms": 3.622
+    },
+    {
+     "seq": 7,
+     "node": "pattern",
+     "kind": "return",
+     "elapsed_ms": 3.63
+    },
+    {
+     "seq": 8,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 3.703
+    },
+    {
+     "seq": 9,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 3.8
+    },
+    {
+     "seq": 10,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 3.809
+    },
+    {
+     "seq": 11,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 4.166
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "cues"
+   },
+   "turn": {
+    "kind": "message",
+    "ran": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   "approvable": true,
+   "approved": null,
+   "refinements_left": 5,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  "blocked": {
+   "session_id": "22363008c2f44c079d8d3902ce44d5c9",
+   "session": {
+    "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund?",
+    "pii_types": [],
+    "facts": {
+     "status": "covered",
+     "scheme_id": "large_cap",
+     "section_title": "Exit load",
+     "fact": "Exit load of 1% if redeemed within 1 year",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof"
+     ]
+    },
+    "pattern": {
+     "theme_id": "fees_brokerage",
+     "theme_name": "Fees & brokerage",
+     "signal": "recurring",
+     "count": 136,
+     "recent_count": 12,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [],
+     "pii_types": [],
+     "advice_refusal": false,
+     "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund?"
+    },
+    "draft": {
+     "reply": "Exit load of 1% if redeemed within 1 year. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "disposition": "escalate",
+     "disagreement": false,
+     "routing_note": {
+      "team": "Fees and mutual fund ops",
+      "priority": "P2",
+      "why": "Facts covered for large_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+     }
+    },
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for large_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "review": {
+     "status": "blocked",
+     "round": 2,
+     "failures": [
+      {
+       "check": "advice",
+       "detail": "Source"
+      }
+     ]
+    },
+    "advice_refusal": false,
+    "refinement_count": 0,
+    "agents_fired": [
+     {
+      "round": 0,
+      "kind": "reviewer_rework",
+      "ran": [
+       "orchestrator"
+      ],
+      "skipped": [
+       "facts",
+       "pattern",
+       "compliance"
+      ]
+     }
+    ]
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 2.398
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 2.6
+    },
+    {
+     "seq": 2,
+     "node": "compliance",
+     "kind": "start",
+     "elapsed_ms": 2.612
+    },
+    {
+     "seq": 3,
+     "node": "facts",
+     "kind": "start",
+     "elapsed_ms": 2.621
+    },
+    {
+     "seq": 4,
+     "node": "pattern",
+     "kind": "start",
+     "elapsed_ms": 2.627
+    },
+    {
+     "seq": 5,
+     "node": "compliance",
+     "kind": "return",
+     "elapsed_ms": 3.821
+    },
+    {
+     "seq": 6,
+     "node": "facts",
+     "kind": "return",
+     "elapsed_ms": 3.831
+    },
+    {
+     "seq": 7,
+     "node": "pattern",
+     "kind": "return",
+     "elapsed_ms": 3.84
+    },
+    {
+     "seq": 8,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 3.915
+    },
+    {
+     "seq": 9,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 4.027
+    },
+    {
+     "seq": 10,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 4.038
+    },
+    {
+     "seq": 11,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 4.352
+    },
+    {
+     "seq": 12,
+     "node": "rewrite",
+     "kind": "start",
+     "elapsed_ms": 4.363
+    },
+    {
+     "seq": 13,
+     "node": "rewrite",
+     "kind": "return",
+     "elapsed_ms": 4.478
+    },
+    {
+     "seq": 14,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 4.486
+    },
+    {
+     "seq": 15,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 4.79
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "model"
+   },
+   "turn": {
+    "kind": "complaint",
+    "ran": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "model"
+    }
+   },
+   "approvable": false,
+   "approved": null,
+   "refinements_left": 5,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  "disagree": {
+   "session_id": "1d64dfc8279a403e82b65792f7d2b271",
+   "session": {
+    "redacted_text": "The chart for HDFC Large Cap Fund shows the wrong NAV",
+    "pii_types": [],
+    "facts": {
+     "status": "covered",
+     "scheme_id": "large_cap",
+     "section_title": "Key fund facts",
+     "fact": "HDFC Large Cap Fund Direct Growth key fund facts. NAV: 1217.44. NAV date: 25-Jun-2026. Expense ratio: 1.04%. Minimum SIP investment: ₹100. Minimum lumpsum investment: ₹100. Fund size (AUM): ₹37,808.31 Cr. Riskometer: Moderately High Riskometer. Category: Equity — Large Cap. Plan: Direct Growth.",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof"
+     ]
+    },
+    "pattern": {
+     "theme_id": "trading_charts",
+     "theme_name": "Trading, charts & orders",
+     "signal": "rising",
+     "count": 503,
+     "recent_count": 50,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [],
+     "pii_types": [],
+     "advice_refusal": false,
+     "redacted_text": "The chart for HDFC Large Cap Fund shows the wrong NAV"
+    },
+    "draft": {
+     "reply": "NAV: 1217.44. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "disposition": "disagree",
+     "disagreement": true,
+     "routing_note": {
+      "team": "Trading platform",
+      "priority": "P1",
+      "why": "Facts covered for large_cap Key fund facts. Pattern trading_charts is rising across 503 reviews from 2026-04-12 to 2026-07-04, 50 of them from 2026-06-28 to 2026-07-04, so this ticket stays open."
+     }
+    },
+    "routing_note": {
+     "team": "Trading platform",
+     "priority": "P1",
+     "why": "Facts covered for large_cap Key fund facts. Pattern trading_charts is rising across 503 reviews from 2026-04-12 to 2026-07-04, 50 of them from 2026-06-28 to 2026-07-04, so this ticket stays open."
+    },
+    "review": {
+     "status": "pass",
+     "round": 1,
+     "failures": []
+    },
+    "advice_refusal": false,
+    "refinement_count": 0,
+    "agents_fired": []
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 2.319
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 2.517
+    },
+    {
+     "seq": 2,
+     "node": "compliance",
+     "kind": "start",
+     "elapsed_ms": 2.528
+    },
+    {
+     "seq": 3,
+     "node": "facts",
+     "kind": "start",
+     "elapsed_ms": 2.537
+    },
+    {
+     "seq": 4,
+     "node": "pattern",
+     "kind": "start",
+     "elapsed_ms": 2.543
+    },
+    {
+     "seq": 5,
+     "node": "compliance",
+     "kind": "return",
+     "elapsed_ms": 3.728
+    },
+    {
+     "seq": 6,
+     "node": "facts",
+     "kind": "return",
+     "elapsed_ms": 3.745
+    },
+    {
+     "seq": 7,
+     "node": "pattern",
+     "kind": "return",
+     "elapsed_ms": 3.753
+    },
+    {
+     "seq": 8,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 3.827
+    },
+    {
+     "seq": 9,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 3.989
+    },
+    {
+     "seq": 10,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 3.998
+    },
+    {
+     "seq": 11,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 4.319
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "cues"
+   },
+   "turn": {
+    "kind": "complaint",
+    "ran": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   "approvable": true,
+   "approved": null,
+   "refinements_left": 5,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  "refined": {
+   "session_id": "b138ac7649f94ff5b8142993f7a4a3e6",
+   "session": {
+    "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund?",
+    "pii_types": [],
+    "facts": {
+     "status": "covered",
+     "scheme_id": "gold_fof",
+     "section_title": "Exit load",
+     "fact": "Exit load of 1%, if redeemed within 15 days.",
+     "citation": "https://groww.in/mutual-funds/hdfc-gold-etf-fund-of-fund-direct-plan-growth",
+     "last_checked": "25-Jun-2026",
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof"
+     ]
+    },
+    "pattern": {
+     "theme_id": "fees_brokerage",
+     "theme_name": "Fees & brokerage",
+     "signal": "recurring",
+     "count": 136,
+     "recent_count": 12,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [],
+     "pii_types": [],
+     "advice_refusal": false,
+     "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund?"
+    },
+    "draft": {
+     "reply": "Exit load of 1%, if redeemed within 15 days. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-gold-etf-fund-of-fund-direct-plan-growth",
+     "last_checked": "25-Jun-2026",
+     "citation": "https://groww.in/mutual-funds/hdfc-gold-etf-fund-of-fund-direct-plan-growth",
+     "disposition": "escalate",
+     "disagreement": false,
+     "routing_note": {
+      "team": "Fees and mutual fund ops",
+      "priority": "P2",
+      "why": "Facts covered for gold_fof Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+     }
+    },
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for gold_fof Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "review": {
+     "status": "pass",
+     "round": 1,
+     "failures": []
+    },
+    "advice_refusal": false,
+    "refinement_count": 3,
+    "agents_fired": [
+     {
+      "round": 1,
+      "kind": "refinement",
+      "ran": [
+       "orchestrator"
+      ],
+      "skipped": [
+       "facts",
+       "pattern",
+       "compliance"
+      ]
+     },
+     {
+      "round": 2,
+      "kind": "refinement",
+      "ran": [
+       "facts",
+       "orchestrator"
+      ],
+      "skipped": [
+       "pattern",
+       "compliance"
+      ]
+     },
+     {
+      "round": 3,
+      "kind": "refinement",
+      "ran": [
+       "pattern",
+       "orchestrator"
+      ],
+      "skipped": [
+       "facts",
+       "compliance"
+      ]
+     }
+    ]
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 2.189
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 2.333
+    },
+    {
+     "seq": 2,
+     "node": "pattern",
+     "kind": "start",
+     "elapsed_ms": 2.343
+    },
+    {
+     "seq": 3,
+     "node": "pattern",
+     "kind": "return",
+     "elapsed_ms": 2.749
+    },
+    {
+     "seq": 4,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 2.76
+    },
+    {
+     "seq": 5,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 2.864
+    },
+    {
+     "seq": 6,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 2.872
+    },
+    {
+     "seq": 7,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 3.135
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "cues"
+   },
+   "turn": {
+    "kind": "refinement",
+    "ran": [
+     "pattern",
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": null,
+     "pattern": "cues",
+     "compliance": null,
+     "reviewer": "cues"
+    }
+   },
+   "approvable": true,
+   "approved": null,
+   "refinements_left": 2,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  "exhausted": {
+   "session_id": "9445c29bad2c43a9aaccda08c33486ab",
+   "session": {
+    "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund?",
+    "pii_types": [],
+    "facts": {
+     "status": "covered",
+     "scheme_id": "large_cap",
+     "section_title": "Exit load",
+     "fact": "Exit load of 1% if redeemed within 1 year",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof"
+     ]
+    },
+    "pattern": {
+     "theme_id": "fees_brokerage",
+     "theme_name": "Fees & brokerage",
+     "signal": "recurring",
+     "count": 136,
+     "recent_count": 12,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [],
+     "pii_types": [],
+     "advice_refusal": false,
+     "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund?"
+    },
+    "draft": {
+     "reply": "Exit load of 1% if redeemed within 1 year. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "disposition": "escalate",
+     "disagreement": false,
+     "routing_note": {
+      "team": "Fees and mutual fund ops",
+      "priority": "P2",
+      "why": "Facts covered for large_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+     }
+    },
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for large_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "review": {
+     "status": "pass",
+     "round": 1,
+     "failures": []
+    },
+    "advice_refusal": false,
+    "refinement_count": 5,
+    "agents_fired": [
+     {
+      "round": 1,
+      "kind": "refinement",
+      "ran": [
+       "orchestrator"
+      ],
+      "skipped": [
+       "facts",
+       "pattern",
+       "compliance"
+      ]
+     },
+     {
+      "round": 2,
+      "kind": "refinement",
+      "ran": [
+       "orchestrator"
+      ],
+      "skipped": [
+       "facts",
+       "pattern",
+       "compliance"
+      ]
+     },
+     {
+      "round": 3,
+      "kind": "refinement",
+      "ran": [
+       "orchestrator"
+      ],
+      "skipped": [
+       "facts",
+       "pattern",
+       "compliance"
+      ]
+     },
+     {
+      "round": 4,
+      "kind": "refinement",
+      "ran": [
+       "orchestrator"
+      ],
+      "skipped": [
+       "facts",
+       "pattern",
+       "compliance"
+      ]
+     },
+     {
+      "round": 5,
+      "kind": "refinement",
+      "ran": [
+       "orchestrator"
+      ],
+      "skipped": [
+       "facts",
+       "pattern",
+       "compliance"
+      ]
+     }
+    ]
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 2.106
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 2.251
+    },
+    {
+     "seq": 2,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 2.267
+    },
+    {
+     "seq": 3,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 2.371
+    },
+    {
+     "seq": 4,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 2.384
+    },
+    {
+     "seq": 5,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 2.641
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "cues"
+   },
+   "turn": {
+    "kind": "refinement",
+    "ran": [
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": null,
+     "pattern": null,
+     "compliance": null,
+     "reviewer": "cues"
+    }
+   },
+   "approvable": true,
+   "approved": null,
+   "refinements_left": 0,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  "approved": {
+   "session_id": "ab577213ca1545448526894c2e84ba1d",
+   "session": {
+    "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund? My PAN is [PAN] and my phone is [PHONE].",
+    "pii_types": [
+     "PAN",
+     "PHONE"
+    ],
+    "facts": {
+     "status": "covered",
+     "scheme_id": "large_cap",
+     "section_title": "Exit load",
+     "fact": "Exit load of 1% if redeemed within 1 year",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "searched": [
+      "large_cap",
+      "mid_cap",
+      "small_cap",
+      "gold_fof",
+      "silver_fof"
+     ]
+    },
+    "pattern": {
+     "theme_id": "fees_brokerage",
+     "theme_name": "Fees & brokerage",
+     "signal": "recurring",
+     "count": 136,
+     "recent_count": 12,
+     "window": {
+      "start": "2026-04-12",
+      "end": "2026-07-04"
+     },
+     "recent_window": {
+      "start": "2026-06-28",
+      "end": "2026-07-04"
+     }
+    },
+    "compliance": {
+     "flags": [
+      "pii"
+     ],
+     "pii_types": [
+      "PAN",
+      "PHONE"
+     ],
+     "advice_refusal": false,
+     "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund? My PAN is [PAN] and my phone is [PHONE]."
+    },
+    "draft": {
+     "reply": "Exit load of 1% if redeemed within 1 year. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "last_checked": "25-Jun-2026",
+     "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+     "disposition": "escalate",
+     "disagreement": false,
+     "routing_note": {
+      "team": "Fees and mutual fund ops",
+      "priority": "P2",
+      "why": "Facts covered for large_cap Exit load. Ingress redacted PAN, PHONE. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+     }
+    },
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for large_cap Exit load. Ingress redacted PAN, PHONE. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "review": {
+     "status": "pass",
+     "round": 1,
+     "failures": []
+    },
+    "advice_refusal": false,
+    "refinement_count": 0,
+    "agents_fired": []
+   },
+   "trace": [
+    {
+     "seq": 0,
+     "node": "ingress",
+     "kind": "start",
+     "elapsed_ms": 2.225
+    },
+    {
+     "seq": 1,
+     "node": "ingress",
+     "kind": "return",
+     "elapsed_ms": 2.474
+    },
+    {
+     "seq": 2,
+     "node": "compliance",
+     "kind": "start",
+     "elapsed_ms": 2.489
+    },
+    {
+     "seq": 3,
+     "node": "facts",
+     "kind": "start",
+     "elapsed_ms": 2.497
+    },
+    {
+     "seq": 4,
+     "node": "pattern",
+     "kind": "start",
+     "elapsed_ms": 2.503
+    },
+    {
+     "seq": 5,
+     "node": "compliance",
+     "kind": "return",
+     "elapsed_ms": 3.717
+    },
+    {
+     "seq": 6,
+     "node": "facts",
+     "kind": "return",
+     "elapsed_ms": 3.728
+    },
+    {
+     "seq": 7,
+     "node": "pattern",
+     "kind": "return",
+     "elapsed_ms": 3.737
+    },
+    {
+     "seq": 8,
+     "node": "draft",
+     "kind": "start",
+     "elapsed_ms": 3.812
+    },
+    {
+     "seq": 9,
+     "node": "draft",
+     "kind": "return",
+     "elapsed_ms": 3.923
+    },
+    {
+     "seq": 10,
+     "node": "reviewer",
+     "kind": "start",
+     "elapsed_ms": 3.932
+    },
+    {
+     "seq": 11,
+     "node": "reviewer",
+     "kind": "return",
+     "elapsed_ms": 4.243
+    }
+   ],
+   "provenance": {
+    "facts": "cues",
+    "pattern": "cues",
+    "compliance": "cues",
+    "reviewer": "cues"
+   },
+   "turn": {
+    "kind": "complaint",
+    "ran": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   "approvable": false,
+   "approved": {
+    "approved_at": "2026-10-23T13:18:50+00:00",
+    "email_file": "ab577213ca1545448526894c2e84ba1d.txt"
+   },
+   "refinements_left": 5,
+   "created_at": "2026-10-23T13:18:50+00:00",
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  }
+ },
+ "sessions": [
+  {
+   "session_id": "721e202e46b54e0dbf88f3d7a76e6a4d",
+   "excerpt": "My order failed on Nippon Small Cap",
+   "disposition": "handoff",
+   "priority": "P1",
+   "review_status": "pass",
+   "refinement_count": 0,
+   "advice_refusal": false,
+   "approved": true,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  {
+   "session_id": "ab577213ca1545448526894c2e84ba1d",
+   "excerpt": "Why was I charged an exit load on HDFC Large Cap Fund? My PAN is [PAN] and my phone is [PHONE].",
+   "disposition": "escalate",
+   "priority": "P2",
+   "review_status": "pass",
+   "refinement_count": 0,
+   "advice_refusal": false,
+   "approved": true,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  {
+   "session_id": "9445c29bad2c43a9aaccda08c33486ab",
+   "excerpt": "Why was I charged an exit load on HDFC Large Cap Fund?",
+   "disposition": "escalate",
+   "priority": "P2",
+   "review_status": "pass",
+   "refinement_count": 5,
+   "advice_refusal": false,
+   "approved": false,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  {
+   "session_id": "b138ac7649f94ff5b8142993f7a4a3e6",
+   "excerpt": "Why was I charged an exit load on HDFC Large Cap Fund?",
+   "disposition": "escalate",
+   "priority": "P2",
+   "review_status": "pass",
+   "refinement_count": 3,
+   "advice_refusal": false,
+   "approved": false,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  {
+   "session_id": "1d64dfc8279a403e82b65792f7d2b271",
+   "excerpt": "The chart for HDFC Large Cap Fund shows the wrong NAV",
+   "disposition": "disagree",
+   "priority": "P1",
+   "review_status": "pass",
+   "refinement_count": 0,
+   "advice_refusal": false,
+   "approved": false,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  {
+   "session_id": "6e80a2a9779c47daadd6a46d953ad317",
+   "excerpt": "What returns should I expect from HDFC Large Cap?",
+   "disposition": "refuse",
+   "priority": "P3",
+   "review_status": "pass",
+   "refinement_count": 0,
+   "advice_refusal": true,
+   "approved": false,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  {
+   "session_id": "b40557087dc84eb7ad0a2e153d45c08c",
+   "excerpt": "Why was I charged an exit load on HDFC Large Cap Fund? My PAN is [PAN] and my phone is [PHONE].",
+   "disposition": "escalate",
+   "priority": "P2",
+   "review_status": "pass",
+   "refinement_count": 0,
+   "advice_refusal": false,
+   "approved": false,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  {
+   "session_id": "58e4e0674b044650bf4c8b58edd9c4bd",
+   "excerpt": "Why is there an exit load fee on my HDFC Mid Cap Fund redemption?",
+   "disposition": "escalate",
+   "priority": "P2",
+   "review_status": "pass",
+   "refinement_count": 0,
+   "advice_refusal": false,
+   "approved": false,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  {
+   "session_id": "9ca2a80ef0fc41889ddddd7862aa9e08",
+   "excerpt": "My order failed on Nippon Small Cap",
+   "disposition": "handoff",
+   "priority": "P1",
+   "review_status": "pass",
+   "refinement_count": 0,
+   "advice_refusal": false,
+   "approved": false,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  },
+  {
+   "session_id": "ff05d714b2094b868eabfdefb4c72d1d",
+   "excerpt": "Why was I charged an exit load on HDFC Large Cap Fund?",
+   "disposition": "escalate",
+   "priority": "P2",
+   "review_status": "pass",
+   "refinement_count": 0,
+   "advice_refusal": false,
+   "approved": false,
+   "updated_at": "2026-10-23T13:18:50+00:00"
+  }
+ ],
+ "records": [
+  {
+   "session_id": "ab577213ca1545448526894c2e84ba1d",
+   "approved_at": "2026-10-23T13:18:50+00:00",
+   "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund? My PAN is [PAN] and my phone is [PHONE].",
+   "pii_types": [
+    "PAN",
+    "PHONE"
+   ],
+   "disposition": "escalate",
+   "reply": "Exit load of 1% if redeemed within 1 year. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+   "citation": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+   "last_checked": "25-Jun-2026",
+   "routing_note": {
+    "team": "Fees and mutual fund ops",
+    "priority": "P2",
+    "why": "Facts covered for large_cap Exit load. Ingress redacted PAN, PHONE. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+   },
+   "pattern_signal": "recurring",
+   "agents_fired": []
+  },
+  {
+   "session_id": "721e202e46b54e0dbf88f3d7a76e6a4d",
+   "approved_at": "2026-10-23T13:18:50+00:00",
+   "redacted_text": "My order failed on Nippon Small Cap",
+   "pii_types": [],
+   "disposition": "handoff",
+   "reply": "The scheme pages we hold do not cover this question. We searched large_cap, mid_cap, small_cap, gold_fof, silver_fof for Key fund facts, Exit load, Benchmark, Investment objective, Stamp duty and tax, Fund management, Minimum investments and found no section that answers it. A support specialist will review this ticket and reply directly.",
+   "citation": null,
+   "last_checked": null,
+   "routing_note": {
+    "team": "Trading platform",
+    "priority": "P1",
+    "why": "Facts not_covered. Pattern trading_charts is rising across 503 reviews from 2026-04-12 to 2026-07-04."
+   },
+   "pattern_signal": "rising",
+   "agents_fired": []
+  }
+ ],
+ "email": {
+  "session_id": "ab577213ca1545448526894c2e84ba1d",
+  "text": "Exit load of 1% if redeemed within 1 year. Last checked 25-Jun-2026. Source: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth\n"
+ },
+ "acceptance": {
+  "status": "pass",
+  "failure": null,
+  "mode": "cues",
+  "ran_at": "2026-10-23T13:18:50+00:00",
+  "real_complaints": [
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "a7424c3b2558887b",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "fees_brokerage",
+    "signal": "recurring",
+    "count": 136,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "2ce5bd6c39919177",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "a0a9a46a0e263ab6",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "400c49abe8397efd",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "dfe4d25027f8c04c",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "41f0521be7da9511",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "a6f0eba66c6163ab",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "b5139fc750d2cb2c",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "trading_charts",
+    "signal": "rising",
+    "count": 503,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "0de75f0a32e051d2",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "93f0f70d21151610",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "bd2593391dbbb045",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "2f2a44b589e122ef",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "trading_charts",
+    "signal": "rising",
+    "count": 503,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "8c8cd32734258eb0",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "fees_brokerage",
+    "signal": "recurring",
+    "count": 136,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "a5f329560adbc914",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "fees_brokerage",
+    "signal": "recurring",
+    "count": 136,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "e5f20ab149ee6be7",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "713aebef381efcd7",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "e74fbcf52037195b",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "12a1830cdf2f491e",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "c4bf07094abdbeac",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "other",
+    "signal": "one-off",
+    "count": 709,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "review_id": "a6fde10913b759b2",
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    }
+   }
+  ],
+  "branches": [
+   {
+    "facts_status": "covered",
+    "scheme_id": "large_cap",
+    "section_title": "Exit load",
+    "theme_id": "fees_brokerage",
+    "signal": "recurring",
+    "count": 136,
+    "compliance_flags": [],
+    "disposition": "escalate",
+    "review_status": "pass",
+    "name": "clean_hit",
+    "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund?",
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for large_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "agents_fired_this_turn": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "agents_fired": [],
+    "trace": [
+     {
+      "seq": 0,
+      "node": "ingress",
+      "kind": "start",
+      "elapsed_ms": 1.93
+     },
+     {
+      "seq": 1,
+      "node": "ingress",
+      "kind": "return",
+      "elapsed_ms": 2.098
+     },
+     {
+      "seq": 2,
+      "node": "compliance",
+      "kind": "start",
+      "elapsed_ms": 2.109
+     },
+     {
+      "seq": 3,
+      "node": "facts",
+      "kind": "start",
+      "elapsed_ms": 2.117
+     },
+     {
+      "seq": 4,
+      "node": "pattern",
+      "kind": "start",
+      "elapsed_ms": 2.123
+     },
+     {
+      "seq": 5,
+      "node": "compliance",
+      "kind": "return",
+      "elapsed_ms": 3.533
+     },
+     {
+      "seq": 6,
+      "node": "facts",
+      "kind": "return",
+      "elapsed_ms": 3.543
+     },
+     {
+      "seq": 7,
+      "node": "pattern",
+      "kind": "return",
+      "elapsed_ms": 3.551
+     },
+     {
+      "seq": 8,
+      "node": "draft",
+      "kind": "start",
+      "elapsed_ms": 3.623
+     },
+     {
+      "seq": 9,
+      "node": "draft",
+      "kind": "return",
+      "elapsed_ms": 3.729
+     },
+     {
+      "seq": 10,
+      "node": "reviewer",
+      "kind": "start",
+      "elapsed_ms": 3.74
+     },
+     {
+      "seq": 11,
+      "node": "reviewer",
+      "kind": "return",
+      "elapsed_ms": 4.034
+     }
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    },
+    "approved": {
+     "session_id": "4659e8713400400996b97b31f85563ee",
+     "email_file": "4659e8713400400996b97b31f85563ee.txt"
+    }
+   },
+   {
+    "facts_status": "not_covered",
+    "scheme_id": null,
+    "section_title": null,
+    "theme_id": "trading_charts",
+    "signal": "rising",
+    "count": 503,
+    "compliance_flags": [],
+    "disposition": "handoff",
+    "review_status": "pass",
+    "name": "corpus_miss",
+    "redacted_text": "My order failed on Nippon Small Cap",
+    "routing_note": {
+     "team": "Trading platform",
+     "priority": "P1",
+     "why": "Facts not_covered. Pattern trading_charts is rising across 503 reviews from 2026-04-12 to 2026-07-04."
+    },
+    "agents_fired_this_turn": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "agents_fired": [],
+    "trace": [
+     {
+      "seq": 0,
+      "node": "ingress",
+      "kind": "start",
+      "elapsed_ms": 2.007
+     },
+     {
+      "seq": 1,
+      "node": "ingress",
+      "kind": "return",
+      "elapsed_ms": 2.184
+     },
+     {
+      "seq": 2,
+      "node": "compliance",
+      "kind": "start",
+      "elapsed_ms": 2.196
+     },
+     {
+      "seq": 3,
+      "node": "facts",
+      "kind": "start",
+      "elapsed_ms": 2.203
+     },
+     {
+      "seq": 4,
+      "node": "pattern",
+      "kind": "start",
+      "elapsed_ms": 2.209
+     },
+     {
+      "seq": 5,
+      "node": "compliance",
+      "kind": "return",
+      "elapsed_ms": 3.327
+     },
+     {
+      "seq": 6,
+      "node": "facts",
+      "kind": "return",
+      "elapsed_ms": 3.338
+     },
+     {
+      "seq": 7,
+      "node": "pattern",
+      "kind": "return",
+      "elapsed_ms": 3.344
+     },
+     {
+      "seq": 8,
+      "node": "draft",
+      "kind": "start",
+      "elapsed_ms": 3.417
+     },
+     {
+      "seq": 9,
+      "node": "draft",
+      "kind": "return",
+      "elapsed_ms": 3.513
+     },
+     {
+      "seq": 10,
+      "node": "reviewer",
+      "kind": "start",
+      "elapsed_ms": 3.522
+     },
+     {
+      "seq": 11,
+      "node": "reviewer",
+      "kind": "return",
+      "elapsed_ms": 3.873
+     }
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    },
+    "approved": null
+   },
+   {
+    "facts_status": "covered",
+    "scheme_id": "mid_cap",
+    "section_title": "Exit load",
+    "theme_id": "fees_brokerage",
+    "signal": "recurring",
+    "count": 136,
+    "compliance_flags": [],
+    "disposition": "escalate",
+    "review_status": "pass",
+    "name": "recurring_theme",
+    "redacted_text": "Why is there an exit load fee on my HDFC Mid Cap Fund redemption?",
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for mid_cap Exit load. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "agents_fired_this_turn": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "agents_fired": [],
+    "trace": [
+     {
+      "seq": 0,
+      "node": "ingress",
+      "kind": "start",
+      "elapsed_ms": 1.972
+     },
+     {
+      "seq": 1,
+      "node": "ingress",
+      "kind": "return",
+      "elapsed_ms": 2.145
+     },
+     {
+      "seq": 2,
+      "node": "compliance",
+      "kind": "start",
+      "elapsed_ms": 2.156
+     },
+     {
+      "seq": 3,
+      "node": "facts",
+      "kind": "start",
+      "elapsed_ms": 2.163
+     },
+     {
+      "seq": 4,
+      "node": "pattern",
+      "kind": "start",
+      "elapsed_ms": 2.167
+     },
+     {
+      "seq": 5,
+      "node": "compliance",
+      "kind": "return",
+      "elapsed_ms": 3.288
+     },
+     {
+      "seq": 6,
+      "node": "facts",
+      "kind": "return",
+      "elapsed_ms": 3.298
+     },
+     {
+      "seq": 7,
+      "node": "pattern",
+      "kind": "return",
+      "elapsed_ms": 3.305
+     },
+     {
+      "seq": 8,
+      "node": "draft",
+      "kind": "start",
+      "elapsed_ms": 3.378
+     },
+     {
+      "seq": 9,
+      "node": "draft",
+      "kind": "return",
+      "elapsed_ms": 3.482
+     },
+     {
+      "seq": 10,
+      "node": "reviewer",
+      "kind": "start",
+      "elapsed_ms": 3.492
+     },
+     {
+      "seq": 11,
+      "node": "reviewer",
+      "kind": "return",
+      "elapsed_ms": 3.779
+     }
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    },
+    "approved": null
+   },
+   {
+    "facts_status": "covered",
+    "scheme_id": "large_cap",
+    "section_title": "Exit load",
+    "theme_id": "fees_brokerage",
+    "signal": "recurring",
+    "count": 136,
+    "compliance_flags": [
+     "pii"
+    ],
+    "disposition": "escalate",
+    "review_status": "pass",
+    "name": "pii",
+    "redacted_text": "Why was I charged an exit load on HDFC Large Cap Fund? My PAN is [PAN] and my phone is [PHONE].",
+    "routing_note": {
+     "team": "Fees and mutual fund ops",
+     "priority": "P2",
+     "why": "Facts covered for large_cap Exit load. Ingress redacted PAN, PHONE. Pattern fees_brokerage is recurring across 136 reviews from 2026-04-12 to 2026-07-04, so this ticket stays open."
+    },
+    "agents_fired_this_turn": [
+     "facts",
+     "pattern",
+     "compliance",
+     "orchestrator"
+    ],
+    "agents_fired": [],
+    "trace": [
+     {
+      "seq": 0,
+      "node": "ingress",
+      "kind": "start",
+      "elapsed_ms": 1.984
+     },
+     {
+      "seq": 1,
+      "node": "ingress",
+      "kind": "return",
+      "elapsed_ms": 2.156
+     },
+     {
+      "seq": 2,
+      "node": "compliance",
+      "kind": "start",
+      "elapsed_ms": 2.167
+     },
+     {
+      "seq": 3,
+      "node": "facts",
+      "kind": "start",
+      "elapsed_ms": 2.174
+     },
+     {
+      "seq": 4,
+      "node": "pattern",
+      "kind": "start",
+      "elapsed_ms": 2.18
+     },
+     {
+      "seq": 5,
+      "node": "compliance",
+      "kind": "return",
+      "elapsed_ms": 3.338
+     },
+     {
+      "seq": 6,
+      "node": "facts",
+      "kind": "return",
+      "elapsed_ms": 3.351
+     },
+     {
+      "seq": 7,
+      "node": "pattern",
+      "kind": "return",
+      "elapsed_ms": 3.357
+     },
+     {
+      "seq": 8,
+      "node": "draft",
+      "kind": "start",
+      "elapsed_ms": 3.433
+     },
+     {
+      "seq": 9,
+      "node": "draft",
+      "kind": "return",
+      "elapsed_ms": 3.541
+     },
+     {
+      "seq": 10,
+      "node": "reviewer",
+      "kind": "start",
+      "elapsed_ms": 3.551
+     },
+     {
+      "seq": 11,
+      "node": "reviewer",
+      "kind": "return",
+      "elapsed_ms": 3.852
+     }
+    ],
+    "provenance": {
+     "facts": "cues",
+     "pattern": "cues",
+     "compliance": "cues",
+     "reviewer": "cues"
+    },
+    "approved": {
+     "session_id": "1d76bf2ef55d406e93c57adaf5268190",
+     "email_file": "1d76bf2ef55d406e93c57adaf5268190.txt"
+    }
+   }
+  ],
+  "advice_thread": [
+   {
+    "turn": 1,
+    "ask": "Should I redeem HDFC Large Cap?",
+    "disposition": "refuse",
+    "flags": [
+     "advice"
+    ],
+    "advice_refusal": true
+   },
+   {
+    "turn": 2,
+    "ask": "Is HDFC Large Cap a good fund?",
+    "disposition": "refuse",
+    "flags": [
+     "advice"
+    ],
+    "advice_refusal": true
+   },
+   {
+    "turn": 3,
+    "ask": "What returns should I expect from HDFC Large Cap?",
+    "disposition": "refuse",
+    "flags": [
+     "advice",
+     "performance_claim"
+    ],
+    "advice_refusal": true
+   },
+   {
+    "turn": 4,
+    "ask": "Just tell me honestly, is large cap worth holding on to?",
+    "disposition": "refuse",
+    "flags": [
+     "advice"
+    ],
+    "advice_refusal": true
+   },
+   {
+    "turn": 5,
+    "ask": "Ok, so should I redeem my HDFC Large Cap units or not?",
+    "disposition": "refuse",
+    "flags": [
+     "advice"
+    ],
+    "advice_refusal": true
+   },
+   {
+    "turn": 6,
+    "ask": "What is the exit load on HDFC Large Cap Fund?",
+    "disposition": "refuse",
+    "flags": [],
+    "advice_refusal": true
+   }
+  ],
+  "caps": {
+   "blocked": {
+    "review_status": "blocked",
+    "review_round": 2,
+    "failed_checks": [
+     "advice"
+    ],
+    "approve_refused": true,
+    "files_written": 0
+   },
+   "refinement_cap": {
+    "applied": 5,
+    "sixth_refused": true,
+    "draft_kept": true
+   }
+  }
+ },
+ "health": {
+  "status": "ok",
+  "environment": "local",
+  "models": {
+   "mode": "off",
+   "agents": "cues",
+   "reviewer": "code",
+   "agent_model": null,
+   "reviewer_model": null
+  },
+  "corpus": {
+   "last_checked": "25-Jun-2026",
+   "schemes": 5
+  },
+  "review_window": {
+   "start": "2026-04-12",
+   "end": "2026-07-04"
+  },
+  "access_code_required": false
+ }
+}
