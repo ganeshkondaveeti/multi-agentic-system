@@ -13,19 +13,23 @@ There is no send tool. The server came from the Milestone 2 MCP server, without 
 2. Configure the OAuth consent screen and add the scopes `https://www.googleapis.com/auth/gmail.compose` and `https://www.googleapis.com/auth/documents`. While the app is in **Testing**, add your Google account as a test user. Google expires refresh tokens for Testing apps after 7 days, so publish the app, or repeat step 5 when drafts start failing with `AUTHENTICATION_FAILED`.
 3. Create an **OAuth client ID** of type **Desktop app** and note its client ID and secret.
 4. Create a Google Doc for the records. Its id is the part of the URL between `/d/` and `/edit`.
-5. Get a token:
+5. Put `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `REPLY_DESK_DOC_ID` in the root `.env`, then sign in:
 
    ```bash
-   cd mcp-server
-   npm ci && npm run build
-   GOOGLE_CLIENT_ID=… GOOGLE_CLIENT_SECRET=… GOOGLE_REDIRECT_URI=http://localhost:3000/oauth/callback npm run auth
+   make install        # builds mcp-server/dist
+   make google-auth    # opens Google's consent page; saves mcp-server/data/google-token.json
    ```
 
-   Open the URL it prints, approve, and paste the code back. The token is saved to `mcp-server/data/google-token.json`, which is gitignored.
+   The sign-in redirects to a one-time listener on `http://127.0.0.1:8765/`, so no code is pasted anywhere. The token file is gitignored and readable by you only. (`npm run auth` in this folder still works, with a copy-and-paste code.)
 
 ## Turning it on
 
-In the root `.env` (local) or the API's Render environment:
+Locally, set `REPLY_DESK_MCP=on` in the root `.env`. On Render, save a Render API key to `~/.render-api-key` (`chmod 600`) and run:
+
+```bash
+make render-env                     # sets the five variables below on reply-desk-api and redeploys
+make render-env SAVE_ACCESS_CODE=1  # also saves the API's ACCESS_CODE to ~/.reply-desk-access-code
+```
 
 | Variable | Value |
 |---|---|
@@ -34,7 +38,17 @@ In the root `.env` (local) or the API's Render environment:
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | from step 3 |
 | `GOOGLE_TOKEN_JSON` | Render only: the contents of `mcp-server/data/google-token.json` |
 
-`/api/health` then reports `"mcp": {"enabled": true, "doc_configured": true}`. After each approve, the approved note shows whether the Doc append and the Gmail draft were done; a failure shows the server's error code and never undoes the approval.
+`make render-env` checks the token with Google before sending it, sets each variable on its own (every other variable stays as it is), and prints names only. `/api/health` then reports `"mcp": {"enabled": true, "doc_configured": true}`. After each approve, the approved note shows whether the Doc append and the Gmail draft were done; a failure shows the server's error code and never undoes the approval.
+
+## Renewing the token (Testing mode)
+
+While the Google app is in Testing mode, the refresh token lasts 7 days. When the approved note shows `AUTHENTICATION_FAILED`, or before the date `make google-auth` printed:
+
+```bash
+make google-auth && make render-env
+```
+
+Publishing the app (Google Auth Platform → Audience → Publish app) removes the 7-day limit.
 
 ## Development
 
