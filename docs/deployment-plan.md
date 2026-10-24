@@ -11,7 +11,7 @@ The earlier version of this plan targeted Railway (backend) and Vercel (frontend
 - **Built and on GitHub:** Phases 0–8 (the API, the web app, the `Dockerfile`, the `Makefile`, and CI). They do not depend on the host, apart from a few leftovers that Phase 9 cleans up.
 - **Render readiness (Phase 9):** done. `render.yaml` is committed, `web/vercel.json` is gone, the Railway and Vercel wording is replaced, and the rate limit reads `CF-Connecting-IP` on Render. The API runs on Render's free plan, so it has no disk (see Decisions).
 - **Deployed and verified (Phases 10–12), 24 Oct 2026:** `https://reply-desk-api.onrender.com` and `https://reply-desk-web.onrender.com`, with live models (Groq agents, `gemini-3.5-flash` reviewer) and the approval-gated MCP step on. See "Production verification results" in Phase 12.
-- **Open:** the two-network rate-limit check (needs a second network), and the cold-start timing. The Google app is in Testing mode, so the Google token must be renewed every 7 days (`make google-auth && make render-env`).
+- **Open:** the two-network rate-limit check (needs a second network), and a cold-start timing with no Reply Desk tab open (two attempts stayed warm because a tab kept polling). The Google app is in Testing mode, so the Google token must be renewed every 7 days (`make google-auth && make render-env`).
 
 ## Decisions
 
@@ -24,7 +24,7 @@ The earlier version of this plan targeted Railway (backend) and Vercel (frontend
 - **The browser calls the API directly.** CORS allows only the static site's origins. In local development, Vite proxies `/api` to `localhost:8000`, so there is no CORS locally. A static-site rewrite that proxies `/api` to the API would remove CORS, but it hides the caller's IP from the rate limiter and adds a hop in front of the SSE stream, so it is not used. Serving the web build from FastAPI would also remove CORS, but it gives up the static site's CDN and the ability to roll back the frontend and backend separately.
 - **The client IP comes from `CF-Connecting-IP` on Render.** Render's public services sit behind Cloudflare, which overwrites that header on every request. Render's own proxy appends its address to `X-Forwarded-For`, so the last hop, which the current code uses, is a proxy address and would put every user in one rate-limit bucket. The header to trust becomes a setting (Phase 9).
 - **Live trace over SSE.** The parallel fan-out is the core of the demo, so the trace streams while the graph runs. EventSource only supports GET, so the client reads a `fetch` response body as a stream.
-- **Approve runs the approval-gated MCP step inside the API.** Reply Desk's MCP server (`mcp-server/`, from Milestone 2 without its send tool or HTTP transport) is built into the API image and started as a stdio subprocess on each approve. It appends the redacted record to a Google Doc and creates a Gmail draft with no recipient. There is no public MCP endpoint and no third service. The local record is written first; a Google failure is reported per step and never undoes the approval. It is off until `REPLY_DESK_MCP=on`.
+- **Approve runs the approval-gated MCP step inside the API.** Reply Desk's MCP server (`mcp-server/`, from Milestone 2 without its send tool or HTTP transport) is built into the API image and started as a stdio subprocess on each approve. It appends the redacted record to a Google Doc and creates a Gmail draft, addressed to the operator inbox in `REPLY_DESK_DRAFT_TO` (no recipient when unset). It is never sent. There is no public MCP endpoint and no third service. The local record is written first; a Google failure is reported per step and never undoes the approval. It is off until `REPLY_DESK_MCP=on`.
 - **Model mode is a server setting.** `REPLY_DESK_MODELS=auto` uses Groq/Gemini when keys are set. `off` forces the cue tables for every request without touching the environment. CI, e2e tests, and the acceptance endpoint run with `off`.
 - **A shared access code guards the public URL.** Each turn costs three Groq calls and one Gemini call. If `ACCESS_CODE` is set, every `/api` call except `/api/health` needs the `X-Access-Code` header. This is a speed bump against quota abuse, not user auth.
 - **Deploys wait for CI.** Both services use Render's "After CI checks pass" auto-deploy trigger (`autoDeployTrigger: checksPass`), so a red `main` never ships.
@@ -586,7 +586,7 @@ Everything Render needs is committed and tested before anything is created in th
 5. Advice: redeem, then "is it good", then returns, then a rephrase, all refused, with the sticky badge.
 6. Refine: Shorter (orchestrator only), gold scheme (Facts only), fee issue last week (Pattern only), then the sixth refine refused.
 7. Acceptance page: run, PASS.
-8. MCP (when `REPLY_DESK_MCP=on`): `/api/health` shows `mcp.enabled` and `mcp.doc_configured`; approve a clean hit, and the approved note shows the Google Doc and the Gmail draft as done. The Doc has a new line with tokens only, and Gmail's Drafts has the reply with no recipient. Nothing appears in Sent.
+8. MCP (when `REPLY_DESK_MCP=on`): `/api/health` shows `mcp.enabled` and `mcp.doc_configured`; approve a clean hit, and the approved note shows the Google Doc and the Gmail draft as done. The Doc has a new line with tokens only, and Gmail's Drafts has the reply, addressed to `REPLY_DESK_DRAFT_TO` when set. Nothing appears in Sent.
 
 **Operations**
 
@@ -614,6 +614,8 @@ Everything Render needs is committed and tested before anything is created in th
 | Unauthenticated `/api` calls | 401; `/api/health` stays public |
 | Static site | deep links load; CSP, `X-Frame-Options: DENY`, and the other headers are served; CORS allows only the site's origin |
 | Rollback rehearsal | API and static site each rolled back and forward through the Render API; auto-deploy turned back on afterwards |
+| Draft recipient | with `REPLY_DESK_DRAFT_TO` set on Render, a production approve (18 s) created a draft addressed to that inbox, label `DRAFT` only |
+| Cold start | not measured: after 16.5 idle minutes the API still answered in 0.23 s, because an open tab kept polling `/api/sessions`; Render documents about a minute |
 
 **Upgrading to keep records**
 
