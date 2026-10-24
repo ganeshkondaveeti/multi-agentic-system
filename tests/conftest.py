@@ -34,6 +34,7 @@ def api(monkeypatch, tmp_path):
     # MCP delivery stays off unless a test turns it on.
     monkeypatch.delenv("REPLY_DESK_MCP", raising=False)
     monkeypatch.delenv("REPLY_DESK_DOC_ID", raising=False)
+    monkeypatch.delenv("REPLY_DESK_DRAFT_TO", raising=False)
 
     def make(*, models=None, raise_server_exceptions=True, **settings):
         client = TestClient(

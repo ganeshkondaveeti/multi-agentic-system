@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Send the approval-gated MCP settings to the Render API service, then redeploy it.
 
-Sets REPLY_DESK_MCP=on, REPLY_DESK_DOC_ID, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and
-GOOGLE_TOKEN_JSON on `reply-desk-api`, one variable at a time, so every other variable
+Sets REPLY_DESK_MCP=on, REPLY_DESK_DOC_ID, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
+GOOGLE_TOKEN_JSON, and REPLY_DESK_DRAFT_TO (when set in .env) on `reply-desk-api`,
+one variable at a time, so every other variable
 on the service is left as it is. Values come from the root .env and
 mcp-server/data/google-token.json. The token is checked with Google first, so an
 expired one is never sent. Only variable names are printed, never values.
@@ -54,13 +55,16 @@ def settings() -> dict[str, str]:
         raise SystemExit("No Google token yet: run `make google-auth` first.")
     token = json.loads(TOKEN_PATH.read_text(encoding="utf-8"))
     check_token(env["GOOGLE_CLIENT_ID"], env["GOOGLE_CLIENT_SECRET"], token)
-    return {
+    values = {
         "REPLY_DESK_MCP": "on",
         "REPLY_DESK_DOC_ID": env["REPLY_DESK_DOC_ID"],
         "GOOGLE_CLIENT_ID": env["GOOGLE_CLIENT_ID"],
         "GOOGLE_CLIENT_SECRET": env["GOOGLE_CLIENT_SECRET"],
         "GOOGLE_TOKEN_JSON": json.dumps(token, separators=(",", ":")),
     }
+    if env.get("REPLY_DESK_DRAFT_TO"):
+        values["REPLY_DESK_DRAFT_TO"] = env["REPLY_DESK_DRAFT_TO"]
+    return values
 
 
 def check_token(client_id: str, client_secret: str, token: dict[str, Any]) -> None:

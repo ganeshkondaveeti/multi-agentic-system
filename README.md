@@ -65,7 +65,7 @@ Sessions live in memory for 2 idle hours; approved records persist in `REPLY_DES
 
 ### Approval-gated MCP (`mcp-server/`)
 
-After a human approve, and only with `REPLY_DESK_MCP=on`, the API starts Reply Desk's MCP server as a stdio subprocess. It appends the redacted record as one line to the Google Doc in `REPLY_DESK_DOC_ID` and creates a Gmail draft of the reply with no recipient. The server has no send tool, so nothing is ever sent. The local record and email file are written first, and a failed Google call never undoes the approval: the approve response and the approved note report each step as done or failed, with the server's error code. `mcp-server/README.md` covers the one-time Google OAuth setup.
+After a human approve, and only with `REPLY_DESK_MCP=on`, the API starts Reply Desk's MCP server as a stdio subprocess. It appends the redacted record as one line to the Google Doc in `REPLY_DESK_DOC_ID` and creates a Gmail draft of the reply, addressed to `REPLY_DESK_DRAFT_TO` when set (no recipient otherwise). The server has no send tool, so nothing is ever sent. The local record and email file are written first, and a failed Google call never undoes the approval: the approve response and the approved note report each step as done or failed, with the server's error code. `mcp-server/README.md` covers the one-time Google OAuth setup.
 
 ### Web app (`web/`)
 

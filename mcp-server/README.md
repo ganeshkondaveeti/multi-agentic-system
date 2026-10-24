@@ -3,7 +3,7 @@
 The approval-gated MCP step from the problem statement. After a human clicks **Approve**, the API (`support_reply.workspace`) starts this server as a stdio subprocess and calls two tools:
 
 - `google_docs_append`: appends the redacted record as one line to a Google Doc.
-- `gmail_draft`: creates a Gmail draft of the reply with no recipient. Whoever sends it from Gmail adds the customer's address, which the app never stores.
+- `gmail_draft`: creates a Gmail draft of the reply, addressed to `REPLY_DESK_DRAFT_TO` when that is set (for example a support inbox), with no recipient otherwise. It is a draft either way: a person reviews it and sends it from Gmail. The app never stores the customer's address.
 
 There is no send tool. The server came from the Milestone 2 MCP server, without its `gmail_send` tool and its unauthenticated HTTP transport. It logs to stderr, because stdout carries the MCP protocol.
 
@@ -35,6 +35,7 @@ make render-env SAVE_ACCESS_CODE=1  # also saves the API's ACCESS_CODE to ~/.rep
 |---|---|
 | `REPLY_DESK_MCP` | `on` |
 | `REPLY_DESK_DOC_ID` | the Doc id from step 4 |
+| `REPLY_DESK_DRAFT_TO` | optional: comma-separated address(es) the draft is addressed to |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | from step 3 |
 | `GOOGLE_TOKEN_JSON` | Render only: the contents of `mcp-server/data/google-token.json` |
 
