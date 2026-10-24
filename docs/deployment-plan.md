@@ -537,7 +537,7 @@ Everything Render needs is committed and tested before anything is created in th
 
   `GROQ_MODEL` and `GEMINI_MODEL` are optional; the defaults are in `llm.py`. Render sets `PORT`, and the `Dockerfile` reads it.
 
-  For the approval-gated MCP step, also set `REPLY_DESK_MCP` (`on`), `REPLY_DESK_DOC_ID`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_TOKEN_JSON` (the contents of `mcp-server/data/google-token.json` after `npm run auth`). `mcp-server/README.md` has the Google setup. If Render does not ask for them when the Blueprint syncs, add them on the API's Environment page.
+  For the approval-gated MCP step, also set `REPLY_DESK_MCP` (`on`), `REPLY_DESK_DOC_ID`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_TOKEN_JSON` (the contents of `mcp-server/data/google-token.json` after `npm run auth`). `mcp-server/README.md` has the Google setup. `make google-auth` gets the token, and `make render-env` (with a Render API key in `~/.render-api-key`) sets all five on the service and redeploys. While the Google app is in Testing mode the token lasts 7 days, so run both again weekly.
 - Apply the Blueprint. The API builds the `Dockerfile` on the free plan and goes live once `/api/health` answers.
 - Note the API's public URL from its dashboard page. If it is not `https://reply-desk-api.onrender.com`, update the CSP `connect-src` in `render.yaml` in a pull request.
 - Copy the generated `ACCESS_CODE` from the API's Environment page.
