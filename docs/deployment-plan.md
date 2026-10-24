@@ -10,7 +10,8 @@ The earlier version of this plan targeted Railway (backend) and Vercel (frontend
 
 - **Built and on GitHub:** Phases 0–8 (the API, the web app, the `Dockerfile`, the `Makefile`, and CI). They do not depend on the host, apart from a few leftovers that Phase 9 cleans up.
 - **Render readiness (Phase 9):** done. `render.yaml` is committed, `web/vercel.json` is gone, the Railway and Vercel wording is replaced, and the rate limit reads `CF-Connecting-IP` on Render. The API runs on Render's free plan, so it has no disk (see Decisions).
-- **Still to do:** Phases 10–12.
+- **Deployed and verified (Phases 10–12), 24 Oct 2026:** `https://reply-desk-api.onrender.com` and `https://reply-desk-web.onrender.com`, with live models (Groq agents, `gemini-3.5-flash` reviewer) and the approval-gated MCP step on. See "Production verification results" in Phase 12.
+- **Open:** the two-network rate-limit check (needs a second network), and the cold-start timing. The Google app is in Testing mode, so the Google token must be renewed every 7 days (`make google-auth && make render-env`).
 
 ## Decisions
 
@@ -120,7 +121,7 @@ flowchart TD
   P4 --> P5 --> P6 --> P7 --> P8 --> P9 --> P10 --> P11 --> P12
 ```
 
-Phases 0–9 are built. Work resumes at Phase 10.
+All phases are built and deployed. Production results are in Phase 12.
 
 ---
 
@@ -590,12 +591,29 @@ Everything Render needs is committed and tested before anything is created in th
 **Operations**
 
 - **Deploys:** merge to `main`, CI goes green, then Render deploys whichever service the change touched. An API deploy drops open sessions and approved records. Deploy the API outside demo hours.
-- **Rollback:** each service's Events page lists past deploys, and **Rollback** redeploys an earlier one. The two services are independent, so roll back only the side that broke. After a rollback, check that the service's auto-deploy setting is still what you want, so the next merge does not undo or skip the fix.
+- **Rollback:** each service's Events page lists past deploys, and **Rollback** redeploys an earlier one (the Render API's `POST /v1/services/{id}/rollback` does the same). The two services are independent, so roll back only the side that broke. A rollback **turns auto-deploy off**, so the fix's merge would not deploy: turn it back on (Settings → Auto-Deploy → After CI checks pass, or `PATCH /v1/services/{id}` with `{"autoDeployTrigger": "checksPass"}`) once the fix is on `main`. A static-site rollback is served about 30 seconds after it goes live, and the CDN can keep the previous `index.html` for up to 5 minutes (`s-maxage=300`).
 - **Keys:** rotate the Groq and Gemini keys and the access code by changing the API's environment variables. Saving redeploys the API. Nothing in the frontend changes except users entering the new code.
 - **Quota:** watch the per-agent `provenance`. A run of `cues` in production means the Groq free tier is exhausted. Raise the plan or lower `REPLY_DESK_RATE_PER_MINUTE`.
 - **Records:** on the free plan, `records.jsonl` and the email drafts last only until the next restart, deploy, or spin-down. They contain redacted text only. To keep a copy, use Export CSV on the Records page before then.
-- **Cold starts:** the first visitor after 15 idle minutes waits about a minute. Open the site a minute before a demo.
+- **Cold starts:** the first visitor after 15 idle minutes waits about a minute. Open the site a minute before a demo. An open, visible Reply Desk tab polls `/api/health` every 30 seconds and the queue every 20, which keeps the instance awake; hidden tabs stop polling.
+- **Approve with MCP takes 15–25 seconds** on the free instance: it starts Node and makes two Google calls after writing the record. The button shows a spinner meanwhile.
 - **Free hours:** if the workspace's 750 instance hours run out, Render suspends the API until the next month.
+
+**Production verification results (24 Oct 2026)**
+
+| Check | Result |
+|---|---|
+| `make e2e-prod` (smoke items 1–7, live models) | 10 of 10 passed in 1.4 min |
+| Clean hit | `escalate`, large-cap citation; `provenance` is `model` for facts, pattern, compliance, and reviewer |
+| SSE | 12 trace events, first after 0.15 s, result after 3.2 s |
+| PII | no raw PAN or phone in responses; Render log search finds 0 raw values and 15 `[PAN]` lines |
+| Approve with MCP (item 8) | Google Doc line appended and Gmail draft created (no recipient, label `DRAFT` only) |
+| Acceptance run | pass |
+| Rate limit, one network | 14 simultaneous turns: 12 answered, 2 got 429 |
+| Forged `CF-Connecting-IP` | rejected by Cloudflare with 403, so the rate-limit key cannot be chosen by a caller |
+| Unauthenticated `/api` calls | 401; `/api/health` stays public |
+| Static site | deep links load; CSP, `X-Frame-Options: DENY`, and the other headers are served; CORS allows only the site's origin |
+| Rollback rehearsal | API and static site each rolled back and forward through the Render API; auto-deploy turned back on afterwards |
 
 **Upgrading to keep records**
 
@@ -643,6 +661,6 @@ Records then survive restarts and deploys, the service never spins down, and Ren
 | 7 | Makefile, Dockerfile, full local run, PII audit | 6 | Built |
 | 8 | GitHub repo, CI, branch protection | 7 | Built |
 | 9 | Client IP header, `render.yaml`, remove Vercel and Railway leftovers | 8 | Built |
-| 10 | Render Blueprint, free API service, variables | 9 | To do |
-| 11 | Static site, API URL, CORS handshake, previews | 10 | To do |
-| 12 | Production smoke, rollback rehearsal, cold-start check | 11 | To do |
+| 10 | Render Blueprint, free API service, variables | 9 | Deployed |
+| 11 | Static site, API URL, CORS handshake, previews | 10 | Deployed (previews off) |
+| 12 | Production smoke, rollback rehearsal, cold-start check | 11 | Verified (two-network check open) |
