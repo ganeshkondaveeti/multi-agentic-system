@@ -44,6 +44,7 @@ class FakeRunner:
 def mcp_on(monkeypatch):
     monkeypatch.setenv("REPLY_DESK_MCP", "on")
     monkeypatch.setenv("REPLY_DESK_DOC_ID", "doc-123")
+    monkeypatch.delenv("REPLY_DESK_DRAFT_TO", raising=False)
 
 
 def test_off_by_default_and_nothing_runs(monkeypatch):
@@ -68,6 +69,29 @@ def test_appends_the_record_and_drafts_without_a_recipient(mcp_on):
     assert mail_tool == "gmail_draft"
     assert mail_args == {"subject": "Support reply draft c786b480 (escalate)", "body": EMAIL}
     assert "to" not in mail_args
+
+
+def test_the_draft_is_addressed_to_the_configured_inbox(mcp_on, monkeypatch):
+    monkeypatch.setenv("REPLY_DESK_DRAFT_TO", "support@example.com, lead@example.com ")
+    runner = FakeRunner()
+
+    delivery = deliver(RECORD, EMAIL, runner=runner)
+
+    assert delivery.email == Step("done")
+    _, (mail_tool, mail_args) = runner.calls
+    assert mail_tool == "gmail_draft"
+    assert mail_args["to"] == ["support@example.com", "lead@example.com"]
+
+
+def test_a_malformed_recipient_skips_only_the_draft(mcp_on, monkeypatch):
+    monkeypatch.setenv("REPLY_DESK_DRAFT_TO", "not-an-address")
+    runner = FakeRunner()
+
+    delivery = deliver(RECORD, EMAIL, runner=runner)
+
+    assert delivery.doc == Step("done")
+    assert delivery.email == Step("failed", "draft_to_invalid")
+    assert [name for name, _ in runner.calls] == ["google_docs_append"]
 
 
 def test_never_calls_a_send_tool(mcp_on):

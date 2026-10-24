@@ -326,7 +326,7 @@ export function ApproveBar({
               testId="delivery-email"
               label="Gmail"
               step={view.approved.delivery.email}
-              done="draft created with no recipient; add it in Gmail before sending"
+              done="draft created; review it in Gmail and send it from there"
             />
           </ul>
         )}

@@ -54,6 +54,9 @@ services:
         sync: false
       - key: REPLY_DESK_DOC_ID
         sync: false
+      # Comma-separated inbox(es) the Gmail draft is addressed to; blank leaves To empty.
+      - key: REPLY_DESK_DRAFT_TO
+        sync: false
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET

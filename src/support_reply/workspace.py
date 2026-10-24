@@ -4,8 +4,9 @@ This is the approval-gated MCP step from the problem statement. It runs only aft
 `gate.approve` has written the local record and email file, and only when
 `REPLY_DESK_MCP=on`. Reply Desk's own MCP server (`mcp-server/`) is started as a stdio
 subprocess for each approve. It has two tools, `google_docs_append` and `gmail_draft`,
-and no send tool. The draft has no recipient: the app never stores the customer's
-address, so whoever sends it from Gmail adds it there.
+and no send tool. The draft is addressed to `REPLY_DESK_DRAFT_TO` when that is set (an
+operator inbox, never the customer: the app does not store the customer's address),
+and has no recipient otherwise. Either way a person sends it from Gmail.
 
 A failure here never undoes an approval. Each step reports `done`, `failed` (with the
 server's error code, never a message body), or `off`.
@@ -17,6 +18,7 @@ import asyncio
 import json
 import logging
 import os
+import re
 import shutil
 from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass
@@ -30,10 +32,12 @@ logger = logging.getLogger(__name__)
 
 MCP_ENV = "REPLY_DESK_MCP"
 DOC_ID_ENV = "REPLY_DESK_DOC_ID"
+DRAFT_TO_ENV = "REPLY_DESK_DRAFT_TO"
 SERVER_ENV = "REPLY_DESK_MCP_SERVER"
 TIMEOUT_SECONDS = 45.0
 # Only these reach the Node process, on top of the SDK's base HOME/PATH/USER set.
 _GOOGLE_ENV = ("GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_REDIRECT_URI", "GOOGLE_TOKEN_JSON", "GOOGLE_TOKEN_PATH")
+_EMAIL = re.compile(r"[^@\s,]+@[^@\s,]+\.[^@\s,]+")
 _NODE_LOG_LEVELS = {"DEBUG": "debug", "INFO": "info", "WARNING": "warn", "ERROR": "error", "CRITICAL": "error"}
 
 Status = Literal["done", "failed", "off"]
@@ -83,14 +87,21 @@ def deliver(record: dict[str, Any], email: str, *, runner: Runner | None = None)
         logger.error("delivery refused for %s: raw PII in the outgoing text", record.get("session_id"))
         return Delivery(doc=Step("failed", "raw_pii"), email=Step("failed", "raw_pii"))
 
+    recipients = draft_recipients()
+    draft: dict[str, Any] = {"subject": subject, "body": email}
+    if recipients:
+        draft["to"] = recipients
+
     calls: list[ToolCall] = []
     if doc_id:
         calls.append(("google_docs_append", {"document_id": doc_id, "content": doc_text}))
-    calls.append(("gmail_draft", {"subject": subject, "body": email}))
+    if recipients is not None:
+        calls.append(("gmail_draft", draft))
 
-    steps = _run(calls, runner or _run_stdio)
+    steps = _run(calls, runner or _run_stdio) if calls else []
     doc = steps.pop(0) if doc_id else Step("failed", "doc_id_missing")
-    delivery = Delivery(doc=doc, email=steps[0])
+    email_step = steps[0] if recipients is not None else Step("failed", "draft_to_invalid")
+    delivery = Delivery(doc=doc, email=email_step)
     logger.info(
         "delivery for %s: doc %s, email %s",
         record.get("session_id"),
@@ -98,6 +109,16 @@ def deliver(record: dict[str, Any], email: str, *, runner: Runner | None = None)
         delivery.email.status,
     )
     return delivery
+
+
+def draft_recipients() -> list[str] | None:
+    """`REPLY_DESK_DRAFT_TO` as a list: empty when unset, None when an address is malformed."""
+    raw = os.environ.get(DRAFT_TO_ENV, "")
+    addresses = [part.strip() for part in raw.split(",") if part.strip()]
+    if any(_EMAIL.fullmatch(address) is None for address in addresses):
+        logger.error("%s holds a malformed address; the Gmail draft is skipped", DRAFT_TO_ENV)
+        return None
+    return addresses
 
 
 def doc_line(record: dict[str, Any]) -> str:
